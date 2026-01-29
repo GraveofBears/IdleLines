@@ -45,8 +45,8 @@ The addon is fully customizable themes, fonts, scaling, fade timing, and more.
 
 ## 🔧 Slash Commands
 
-`/idlelines`
-`/il`
+`/idle test` Generate Poem at any time.
+`/idle` Open Options Settins.
 
 
 These open the configuration panel where you can:
