@@ -1,0 +1,35 @@
+## Interface: 120000
+## Title: IdleLines
+## Notes: Your character writes poetry when AFK.
+## Author: Grave
+## Version: 1.0
+## SavedVariables: IdleLinesDB
+## IconTexture: Interface\Icons\INV_Scroll_11
+
+# Data Templates (MUST LOAD FIRST!)
+data/templates_general.lua
+data/templates_class.lua
+data/templates_zone.lua
+data/templates_time.lua
+data/templates_seasonal.lua
+data/templates_classzone.lua
+data/templates_rare.lua
+
+# Recent Event Templates
+data/templates_recentKill.lua
+data/templates_recentSpell.lua
+data/templates_recentLoot.lua
+data/templates_recentEmote.lua
+data/templates_recentSkill.lua
+data/templates_recentLevel.lua
+data/templates_recentAchievement.lua
+data/templates_recentMount.lua
+
+# Core Systems
+Core.lua
+Events.lua
+Generator.lua
+UI.lua
+
+# Unified Config System
+config/Config.lua
