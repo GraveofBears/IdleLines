@@ -12,133 +12,398 @@ ns.UI = UI
 ------------------------------------------------------------
 
 UI.Themes = {
+
+    ------------------------------------------------------------
+    -- NIGHT FAE
+    ------------------------------------------------------------
     {
-        name = "Classic Parchment",
-        description = "Warm beige paper with dark brown ink",
-        bgFile = "Interface\\HELPFRAME\\Tileable-Parchment",
+        name = "Night Fae",
+        description = "Soft blue parchment with fae magic tones",
+        useAtlas = true,
+        atlasName = "UI-Frame-NightFae-CardParchmentWider",
         edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-        tileSize = 512,
         edgeSize = 32,
         bgColor = {1, 1, 1, 1},
-        borderColor = {0.82, 0.72, 0.50, 1},   -- warmer gold
-        textColor = {0.20, 0.15, 0.10, 1},     -- deeper brown
-        titleColor = {0.28, 0.20, 0.10, 1},    -- richer header brown
+        borderColor = {0.55, 0.75, 1.0, 1},
+        textColor = {0.65, 0.80, 1.00, 1},
+        titleColor = {0.20, 0.30, 0.50, 1},
+        outlineColor = {1, 1, 1, 1},
     },
 
+    ------------------------------------------------------------
+    -- KYRIAN
+    ------------------------------------------------------------
     {
-        name = "Faded Parchment",
-        description = "Light paper with soft brown ink",
-        bgFile = "Interface\\Glues\\CREDITS\\Parchment6",
+        name = "Kyrian",
+        description = "Clean ascended parchment with blue-gold trim",
+        useAtlas = true,
+        atlasName = "UI-Frame-Kyrian-CardParchmentWider",
         edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-        tileSize = 512,
         edgeSize = 32,
         bgColor = {1, 1, 1, 1},
-        borderColor = {0.78, 0.68, 0.48, 1},   -- muted gold
-        textColor = {0.30, 0.22, 0.15, 1},     -- softer brown
-        titleColor = {0.30, 0.22, 0.14, 1},    -- warm header
+        borderColor = {0.70, 0.85, 1.0, 1},
+        textColor = {0.20, 0.25, 0.35, 1},
+        titleColor = {0.35, 0.45, 0.60, 1},
+        outlineColor = {1, 1, 1, 1},
     },
 
+    ------------------------------------------------------------
+    -- VENTHYR
+    ------------------------------------------------------------
     {
-        name = "Dark Sandstone",
-        description = "Dark sandstone with crisp silver text",
-        bgFile = "Interface\\HELPFRAME\\DarkSandstone-Tile",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tileSize = 512,
-        edgeSize = 32,
-        bgColor = {1, 1, 1, 1},
-        borderColor = {0.70, 0.70, 0.75, 1},   -- cooler silver-gray
-        textColor = {0.88, 0.88, 0.95, 1},     -- strong contrast
-        titleColor = {0.75, .75, 0.80, 1},    -- slightly brighter header
-    },
-
-    {
-        name = "Mahogany Wood",
-        description = "Rich dark red wood with golden text",
-        bgFile = "Interface\\Garrison\\GarrisonUIBackground",
-        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-        tileSize = 512,
-        edgeSize = 32,
-        bgColor = {1, 1, 1, 1},
-        borderColor = {0.92, 0.80, 0.45, 1},   -- deeper gold
-        textColor = {0.95, 0.85, 0.55, 1},     -- warm parchment-gold
-        titleColor = {1.0, 0.92, 0.70, 1},     -- bright header
-    },
-
-    {
-        name = "Dark Marble",
-        description = "Deep stone with silver text",
-        bgFile = "Interface\\FrameGeneral\\UI-Background-Marble",
+        name = "Venthyr",
+        description = "Dark gothic parchment with crimson accents",
+        useAtlas = true,
+        atlasName = "UI-Frame-Venthyr-CardParchmentWider",
         edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-        tileSize = 512,
         edgeSize = 32,
-        bgColor = {0.28, 0.28, 0.33, 1},       -- cooler stone
-        borderColor = {0.62, 0.62, 0.72, 1},   -- refined silver
-        textColor = {0.88, 0.88, 0.95, 1},     -- soft silver-white
-        titleColor = {0.98, 0.98, 1.0, 1},     -- bright silver header
+        bgColor = {1, 1, 1, 1},
+        borderColor = {0.55, 0.10, 0.10, 1},
+        textColor = {0.90, 0.85, 0.80, 1},
+        titleColor = {1.0, 0.30, 0.30, 1},
+        outlineColor = {0.1, 0.0, 0.0, 1},
     },
 
+    ------------------------------------------------------------
+    -- NECROLORD
+    ------------------------------------------------------------
     {
-        name = "Rough Stone",
-        description = "Rough stone finish with silver text",
-        bgFile = "Interface\\Collections\\CollectionsBackgroundTile",
+        name = "Necrolord",
+        description = "Bone-forged parchment with plague-green accents",
+        useAtlas = true,
+        atlasName = "UI-Frame-Necrolord-CardParchmentWider",
         edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-        tileSize = 512,
-        edgeSize = 32,
-        bgColor = {0.36, 0.36, 0.40, 1},       -- lighter stone
-        borderColor = {0.68, 0.68, 0.78, 1},   -- cooler silver
-        textColor = {0.90, 0.90, 0.96, 1},     -- brighter silver
-        titleColor = {1.0, 1.0, 1.0, 1},       -- crisp white header
-    },
-
-    ------------------------------------------------------------
-    -- NEW THEME 1: Bank Ledger Parchment
-    ------------------------------------------------------------
-    {
-        name = "Bank Ledger Parchment",
-        description = "Soft parchment used in bank ledgers",
-        bgFile = "Interface\\BankFrame\\Bank-Background",
-        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-        tileSize = 512,
         edgeSize = 32,
         bgColor = {1, 1, 1, 1},
-        borderColor = {0.85, 0.75, 0.55, 1},   -- warm ledger gold
-        textColor = {0.20, 0.14, 0.08, 1},     -- classic ink brown
-        titleColor = {0.75, 0.75, 0.80, 1},    -- deeper ledger header
+        borderColor = {0.45, 0.75, 0.45, 1},
+        textColor = {0.25, 0.30, 0.25, 1},
+        titleColor = {0.35, 0.55, 0.35, 1},
+        outlineColor = {1, 1, 1, 1},
     },
 
     ------------------------------------------------------------
-    -- NEW THEME 2: Mission Table Parchment
+    -- MECHAGON
     ------------------------------------------------------------
     {
-        name = "Mission Table Parchment",
-        description = "Warm parchment from the Garrison mission table",
-        bgFile = "Interface\\Garrison\\GarrisonMissionParchment",
-        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-        tileSize = 512,
+        name = "Mechagon",
+        description = "Clean mechanical parchment with steel trim",
+        useAtlas = true,
+        atlasName = "UI-Frame-Mechagon-CardParchmentWider",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
         edgeSize = 32,
         bgColor = {1, 1, 1, 1},
-        borderColor = {0.88, 0.78, 0.52, 1},   -- mission-table gold
-        textColor = {0.90, 0.80, 0.50, 1},     -- warm readable brown
-        titleColor = {0.95, 0.85, 0.55, 1},    -- strong parchment header
+        borderColor = {0.60, 0.70, 0.80, 1},
+        textColor = {0.20, 0.25, 0.30, 1},
+        titleColor = {0.45, 0.55, 0.65, 1},
+        outlineColor = {1, 1, 1, 1},
     },
 
     ------------------------------------------------------------
-    -- CUSTOM THEME (uses saved colors from DB)
+    -- MARINE
     ------------------------------------------------------------
     {
-        name = "Custom",
-        description = "Fully customizable colors - configure in settings below",
-        bgFile = "Interface\\Buttons\\WHITE8x8",  -- solid color background
-        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-        tileSize = 1,
+        name = "Marine",
+        description = "Stormy blue parchment with nautical trim",
+        useAtlas = true,
+        atlasName = "UI-Frame-Marine-CardParchmentWider",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
         edgeSize = 32,
-        -- Colors will be overridden by DB values
-        bgColor = {0.95, 0.87, 0.69, 1},
-        borderColor = {0.82, 0.72, 0.50, 1},
-        textColor = {0.20, 0.15, 0.10, 1},
-        titleColor = {0.28, 0.20, 0.10, 1},
-        isCustom = true,  -- flag to identify custom theme
+        bgColor = {1, 1, 1, 1},
+        borderColor = {0.40, 0.55, 0.80, 1},
+        textColor = {0.10, 0.15, 0.25, 1},
+        titleColor = {0.70, 0.70, 0.70, 1},
+        outlineColor = {1, 1, 1, 1},
     },
+
+    ------------------------------------------------------------
+    -- HORDE
+    ------------------------------------------------------------
+    {
+        name = "Horde",
+        description = "Rugged red parchment with iron trim",
+        useAtlas = true,
+        atlasName = "UI-Frame-Horde-CardParchmentWider",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        edgeSize = 32,
+        bgColor = {1, 1, 1, 1},
+        borderColor = {0.60, 0.10, 0.10, 1},
+        textColor = {0.25, 0.20, 0.15, 1},
+        titleColor = {0.50, 0.15, 0.15, 1},
+        outlineColor = {1, 1, 1, 1},
+    },
+
+    ------------------------------------------------------------
+    -- ALLIANCE
+    ------------------------------------------------------------
+    {
+        name = "Alliance",
+        description = "Royal parchment with blue and gold trim",
+		useAtlas = true,
+        atlasName = "UI-Frame-Alliance-CardParchmentWider",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        edgeSize = 32,
+        bgColor = {1, 1, 1, 1},
+        borderColor = {0.80, 0.70, 0.30, 1},
+        textColor = {0.20, 0.25, 0.40, 1},
+        titleColor = {0.93, 0.78, 0.23, 1},
+        outlineColor = {1, 1, 1, 1},
+    },
+
+    ------------------------------------------------------------
+    -- NEUTRAL
+    ------------------------------------------------------------
+    {
+        name = "Neutral",
+        description = "Simple parchment with soft gray trim",
+        useAtlas = true,
+        atlasName = "UI-Frame-Neutral-CardParchmentWider",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        edgeSize = 32,
+        bgColor = {1, 1, 1, 1},
+        borderColor = {0.55, 0.55, 0.55, 1},
+        textColor = {0.25, 0.25, 0.25, 1},
+        titleColor = {0.35, 0.35, 0.35, 1},
+        outlineColor = {1, 1, 1, 1},
+    },
+	
+	------------------------------------------------------------
+	-- Dark
+	------------------------------------------------------------
+	{
+		name = "Dark",
+		description = "Simple dark theme with soft gray trim",
+		useAtlas = true,
+		atlasName = "GarrMissionLocation-Maw-bg-02",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.40, 0.40, 0.40, 1},
+		textColor = {0.15, 0.15, 0.15, 1},
+		titleColor = {0.85, 0.85, 0.85, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- DeathKnight
+	------------------------------------------------------------
+	{
+		name = "DeathKnight",
+		description = "Frozen DeathKnight style theme with light blue trim",
+		useAtlas = true,
+		atlasName = "Artifacts-DeathKnightFrost-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.35, 0.55, 0.80, 1},
+		textColor = {0.12, 0.14, 0.18, 1},
+		titleColor = {0.60, 0.80, 1.00, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- DemonHunter
+	------------------------------------------------------------
+	{
+		name = "DemonHunter",
+		description = "A DemonHunter style theme with purple accents",
+		useAtlas = true,
+		atlasName = "Artifacts-DemonHunter-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.40, 0.85, 0.55, 1},
+		textColor = {0.12, 0.14, 0.12, 1},
+		titleColor = {0.75, 0.25, 0.95, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Druid
+	------------------------------------------------------------
+	{
+		name = "Druid",
+		description = "A Druid style theme with green accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Druid-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.80, 0.55, 0.20, 1},
+		textColor = {0.40, 0.70, 0.55, 1},
+		titleColor = {0.60, 0.90, 0.60, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Hunter
+	------------------------------------------------------------
+	{
+		name = "Hunter",
+		description = "A Hunter style theme with gold accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Hunter-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.40, 0.65, 0.30, 1},
+		textColor = {0.12, 0.14, 0.10, 1},
+		titleColor = {0.67, 0.83, 0.45, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Mage
+	------------------------------------------------------------
+	{
+		name = "Mage",
+		description = "A Mage style theme with light blue accents",
+		useAtlas = true,
+		atlasName = "Artifacts-MageArcane-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.30, 0.60, 0.85, 1},
+		textColor = {0.12, 0.14, 0.18, 1},
+		titleColor = {0.41, 0.80, 0.94, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Monk
+	------------------------------------------------------------
+	{
+		name = "Monk",
+		description = "A Monk style theme with golden accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Monk-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.45, 0.75, 0.55, 1},
+		textColor = {0.12, 0.14, 0.12, 1},
+		titleColor = {0.00, 1.00, 0.59, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Paladin
+	------------------------------------------------------------
+	{
+		name = "Paladin",
+		description = "A Paladin style theme with gold accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Paladin-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.85, 0.70, 0.30, 1},
+		textColor = {0.90, 0.85, 0.75, 1},
+		titleColor = {0.95, 0.92, 0.85, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Priest
+	------------------------------------------------------------
+	{
+		name = "Priest",
+		description = "A Priest style theme with white accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Priest-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.85, 0.85, 0.85, 1},
+		textColor = {0.70, 0.70, 0.70, 1},
+		titleColor = {1.00, 1.00, 1.00, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- ShadowPriest
+	------------------------------------------------------------
+	{
+		name = "ShadowPriest",
+		description = "A ShadowPriest style theme with neon purple accents",
+		useAtlas = true,
+		atlasName = "Artifacts-PriestShadow-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.55, 0.30, 0.75, 1},
+		textColor = {0.14, 0.12, 0.18, 1},
+		titleColor = {0.80, 0.45, 1.00, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Rogue
+	------------------------------------------------------------
+	{
+		name = "Rogue",
+		description = "A Rogue style theme with crimson accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Rogue-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.70, 0.20, 0.20, 1},
+		textColor = {0.14, 0.10, 0.10, 1},
+		titleColor = {1.00, 0.24, 0.24, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Shaman
+	------------------------------------------------------------
+	{
+		name = "Shaman",
+		description = "A Shaman style theme with light blue accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Shaman-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.20, 0.45, 0.85, 1},
+		textColor = {0.40, 0.70, 1.00, 1},
+		titleColor = {0.65, 0.80, 1.00, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Warlock
+	------------------------------------------------------------
+	{
+		name = "Warlock",
+		description = "A Warlock style theme with neon green accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Warlock-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.50, 0.25, 0.65, 1},
+		textColor = {0.14, 0.12, 0.16, 1},
+		titleColor = {0.58, 0.51, 0.79, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+
+	------------------------------------------------------------
+	-- Warrior
+	------------------------------------------------------------
+	{
+		name = "Warrior",
+		description = "A Warrior style theme with bronze accents",
+		useAtlas = true,
+		atlasName = "Artifacts-Warrior-BG",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 32,
+		bgColor = {1, 1, 1, 1},
+		borderColor = {0.62, 0.46, 0.28, 1},
+		textColor = {0.90, 0.55, 0.20, 1},
+		titleColor = {1.00, 0.35, 0.05, 1},
+		outlineColor = {0.05, 0.05, 0.05, 1},
+	},
+		
 }
 
 local function GetDB()
@@ -168,6 +433,15 @@ function UI:CreateFrame()
     frame:Hide()
 
     --------------------------------------------------------
+    -- Background Texture (for atlas-based themes)
+    --------------------------------------------------------
+    
+    local bg = frame:CreateTexture(nil, "BACKGROUND")
+    frame.bgTexture = bg
+    bg:SetAllPoints(true)
+    bg:Hide()  -- Hidden by default, shown for atlas themes
+
+    --------------------------------------------------------
     -- Apply Theme
     --------------------------------------------------------
     
@@ -177,11 +451,11 @@ function UI:CreateFrame()
     -- Additional Parchment Overlay (for more texture)
     --------------------------------------------------------
 
-    local parchmentOverlay = frame:CreateTexture(nil, "BACKGROUND")
+    local parchmentOverlay = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
     frame.parchmentOverlay = parchmentOverlay
     parchmentOverlay:SetAllPoints(true)
     parchmentOverlay:SetTexture("Interface\\FrameGeneral\\UI-Background-Marble")
-    parchmentOverlay:SetAlpha(0.2)
+    parchmentOverlay:SetAlpha(0.1)
     parchmentOverlay:SetVertexColor(0.95, 0.87, 0.69)
 
     --------------------------------------------------------
@@ -193,7 +467,7 @@ function UI:CreateFrame()
     vignette:SetAllPoints(true)
     vignette:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CharacterCreate-Factions")
     vignette:SetTexCoord(0, 1, 0.5, 1)
-    vignette:SetAlpha(0.08)
+    vignette:SetAlpha(0.05)
     vignette:SetVertexColor(0.4, 0.3, 0.2)
 
     --------------------------------------------------------
@@ -202,7 +476,7 @@ function UI:CreateFrame()
 
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalHuge")
     frame.title = title
-    title:SetPoint("TOP", 0, -20)
+    title:SetPoint("TOP", 0, -50)
     title:SetText("IdleLines")
 
     --------------------------------------------------------
@@ -238,7 +512,7 @@ function UI:CreateFrame()
 
     local container = CreateFrame("Frame", nil, frame)
     frame.container = container
-    container:SetPoint("TOPLEFT", 35, -55)
+    container:SetPoint("TOPLEFT", 35, -85)
     container:SetPoint("BOTTOMRIGHT", -35, 30)
     container:SetSize(1, 1)
 
@@ -311,42 +585,57 @@ function UI:ApplyTheme()
     local frame = self.frame
     local db = GetDB()
     
-    -- Get theme index (default to 1 - Classic Parchment)
+    -- Get theme index (default to 1)
     local themeIndex = db.theme or 1
     local theme = self.Themes[themeIndex]
     
     if not theme then
         theme = self.Themes[1]
+        themeIndex = 1
     end
     
-    -- If custom theme, use DB colors
-    local bgColor, borderColor, textColor, titleColor
+    -- Check if this theme has color overrides in the DB
+    local themeOverrides = db.themeOverrides and db.themeOverrides[themeIndex]
     
-    if theme.isCustom then
-        bgColor = db.customBgColor or theme.bgColor
-        borderColor = db.customBorderColor or theme.borderColor
-        textColor = db.customTextColor or theme.textColor
-        titleColor = textColor  -- Use same as text for custom
+    -- Use overrides if they exist, otherwise use theme defaults
+    local bgColor = (themeOverrides and themeOverrides.bgColor) or theme.bgColor
+    local borderColor = (themeOverrides and themeOverrides.borderColor) or theme.borderColor
+    local textColor = (themeOverrides and themeOverrides.textColor) or theme.textColor
+    local titleColor = (themeOverrides and themeOverrides.titleColor) or theme.titleColor
+    local outlineColor = (themeOverrides and themeOverrides.outlineColor) or theme.outlineColor or {0, 0, 0, 1}
+    
+    -- Handle atlas-based themes
+    if theme.useAtlas and frame.bgTexture then
+        -- Use atlas texture as background
+        frame.bgTexture:SetAtlas(theme.atlasName, true)
+        frame.bgTexture:SetVertexColor(bgColor[1], bgColor[2], bgColor[3], bgColor[4] or 1)
+        frame.bgTexture:Show()
+        
+        -- Set up border only
+        frame:SetBackdrop({
+            edgeFile = theme.edgeFile,
+            edgeSize = theme.edgeSize,
+            insets = { left = 11, right = 12, top = 12, bottom = 11 },
+        })
+        frame:SetBackdropBorderColor(borderColor[1], borderColor[2], borderColor[3], 1.0)
     else
-        bgColor = theme.bgColor
-        borderColor = theme.borderColor
-        textColor = theme.textColor
-        titleColor = theme.titleColor
+        -- Traditional backdrop-based theme
+        if frame.bgTexture then
+            frame.bgTexture:Hide()
+        end
+        
+        frame:SetBackdrop({
+            bgFile   = theme.bgFile,
+            edgeFile = theme.edgeFile,
+            tile     = true,
+            tileSize = theme.tileSize,
+            edgeSize = theme.edgeSize,
+            insets   = { left = 11, right = 12, top = 12, bottom = 11 },
+        })
+        
+        frame:SetBackdropColor(bgColor[1], bgColor[2], bgColor[3], 1.0)
+        frame:SetBackdropBorderColor(borderColor[1], borderColor[2], borderColor[3], 1.0)
     end
-    
-    -- Apply backdrop
-    frame:SetBackdrop({
-        bgFile   = theme.bgFile,
-        edgeFile = theme.edgeFile,
-        tile     = true,
-        tileSize = theme.tileSize,
-        edgeSize = theme.edgeSize,
-        insets   = { left = 11, right = 12, top = 12, bottom = 11 },
-    })
-    
-    -- Apply colors (with full opacity - transparency applied later in ApplySettings)
-    frame:SetBackdropColor(bgColor[1], bgColor[2], bgColor[3], 1.0)
-    frame:SetBackdropBorderColor(borderColor[1], borderColor[2], borderColor[3], 1.0)
     
     -- Apply title color
     if frame.title then
@@ -361,7 +650,10 @@ function UI:ApplyTheme()
     -- Store theme and colors for FadeInLines to use
     self.currentTheme = theme
     self.currentTextColor = textColor
-    self.currentOutlineColor = db.customOutlineColor or {0, 0, 0, 1}
+    self.currentOutlineColor = outlineColor
+    
+    -- Update existing poem lines if a poem is currently displayed
+    self:UpdatePoemColors()
 end
 
 ------------------------------------------------------------
@@ -448,6 +740,25 @@ function UI:FadeInLines(poem)
 
         yOffset = yOffset + h + 4
         delay = delay + 0.55
+    end
+end
+
+------------------------------------------------------------
+-- Public: Update Poem Colors (for when theme changes while poem is visible)
+------------------------------------------------------------
+
+function UI:UpdatePoemColors()
+    if not self.frame or not self.frame.container or not self.frame.container.lines then
+        return
+    end
+    
+    local textColor = self.currentTextColor or {0.20, 0.15, 0.10, 1}
+    local outlineColor = self.currentOutlineColor or {0, 0, 0, 1}
+    
+    -- Update all existing poem lines
+    for _, fs in ipairs(self.frame.container.lines) do
+        fs:SetTextColor(unpack(textColor))
+        fs:SetShadowColor(outlineColor[1], outlineColor[2], outlineColor[3], 0.6)
     end
 end
 
@@ -547,17 +858,24 @@ function UI:ApplySettings()
     
     -- Apply alpha to backdrop by adjusting backdrop alpha channel
     local r, g, b = frame:GetBackdropColor()
-    frame:SetBackdropColor(r, g, b, alpha)
+    if r then  -- Only if backdrop has a background color
+        frame:SetBackdropColor(r, g, b, alpha)
+    end
     
     local br, bg, bb = frame:GetBackdropBorderColor()
     frame:SetBackdropBorderColor(br, bg, bb, alpha)
     
+    -- Apply alpha to atlas texture if present
+    if frame.bgTexture and frame.bgTexture:IsShown() then
+        frame.bgTexture:SetAlpha(alpha)
+    end
+    
     -- Apply alpha to overlays
     if frame.parchmentOverlay then
-        frame.parchmentOverlay:SetAlpha(0.2 * alpha)
+        frame.parchmentOverlay:SetAlpha(0.1 * alpha)
     end
     if frame.vignette then
-        frame.vignette:SetAlpha(0.08 * alpha)
+        frame.vignette:SetAlpha(0.05 * alpha)
     end
     
     -- Apply alpha to buttons

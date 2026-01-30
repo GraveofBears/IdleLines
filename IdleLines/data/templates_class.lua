@@ -3873,7 +3873,7 @@ IdleLines_Templates_Class = {
         "Bear, cat, moonkin, tree—I am all forms, none fixed.",
         "Cenarius himself blessed the first druids with shapeshifting.",
         "I heal wounds with nature's regenerative touch.",
-        "The balance must be maintained—corruption purged, growth nurtured.",
+        "The balance must be maintained.",
         "I've stood guard at the World Tree.",
         "My claws rend armor as easily as bear claws rend flesh.",
         "Moonfire and sunfire—celestial fury at my call.",

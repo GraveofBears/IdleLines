@@ -24,13 +24,10 @@ local defaults = {
     delay           = 0,  -- Delay before showing poem (seconds)
     font            = "QuestFont",
     fontSize        = 18,
-    poemLength      = 40, -- Maximum lines in poem (36-44 range)
+    poemLength      = 40, -- Maximum lines in poem (5-44 range)
 
-    -- Custom theme colors
-    customBgColor = {0.95, 0.87, 0.69, 1},      -- Background color
-    customBorderColor = {0.82, 0.72, 0.50, 1},  -- Border color
-    customTextColor = {0.20, 0.15, 0.10, 1},    -- Text color
-    customOutlineColor = {0, 0, 0, 1},          -- Text outline color
+    -- Theme color overrides (indexed by theme number)
+    themeOverrides = {},
 
     -- Position
     framePos = {},

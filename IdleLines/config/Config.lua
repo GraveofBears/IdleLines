@@ -438,6 +438,9 @@ function Config:Build(panel)
     -- Store references to custom color pickers (created later)
     local customColorPickers = {}
     
+    -- Function to update color picker displays (defined later, called by dropdown)
+    local UpdateColorPickers
+    
     local themeDropdown = CreateModernDropdown(content, "Theme", themeNames, initialThemeIndex, function(index, name)
         db.theme = index
         if ns.UI and ns.UI.ApplyTheme then
@@ -448,16 +451,9 @@ function Config:Build(panel)
             themeDesc:SetText(themeDescriptions[index])
         end
         
-        -- Enable/disable custom color pickers based on theme
-        local isCustom = (name == "Custom")
-        for _, picker in ipairs(customColorPickers) do
-            if isCustom then
-                picker:SetAlpha(1.0)
-                picker:EnableMouse(true)
-            else
-                picker:SetAlpha(0.4)
-                picker:EnableMouse(false)
-            end
+        -- Update color pickers to show new theme's colors
+        if UpdateColorPickers then
+            UpdateColorPickers()
         end
     end)
     themeDropdown:SetPoint("TOPLEFT", appearance, "BOTTOMLEFT", 10, -10)
@@ -468,20 +464,50 @@ function Config:Build(panel)
     --------------------------------------------------------
     -- CUSTOM THEME COLORS (Only active when Custom theme selected)
     --------------------------------------------------------
+    -- THEME COLOR CUSTOMIZATION
+    --------------------------------------------------------
     
-    local customSection = CreateSection(content, "Custom Theme Colors", y)
+    local customSection = CreateSection(content, "Theme Color Customization", y)
     y = y - 40
+    
+    -- Helper to get current theme's colors (with overrides if they exist)
+    local function GetCurrentThemeColors()
+        local themeIndex = db.theme or 1
+        local theme = ns.UI and ns.UI.Themes and ns.UI.Themes[themeIndex]
+        if not theme then return nil end
+        
+        local overrides = db.themeOverrides and db.themeOverrides[themeIndex]
+        
+        return {
+            bgColor = (overrides and overrides.bgColor) or theme.bgColor,
+            borderColor = (overrides and overrides.borderColor) or theme.borderColor,
+            textColor = (overrides and overrides.textColor) or theme.textColor,
+            titleColor = (overrides and overrides.titleColor) or theme.titleColor,
+            outlineColor = (overrides and overrides.outlineColor) or theme.outlineColor or {0, 0, 0, 1},
+        }
+    end
+    
+    -- Helper to set theme override
+    local function SetThemeOverride(colorType, color)
+        local themeIndex = db.theme or 1
+        db.themeOverrides = db.themeOverrides or {}
+        db.themeOverrides[themeIndex] = db.themeOverrides[themeIndex] or {}
+        db.themeOverrides[themeIndex][colorType] = color
+        
+        if ns.UI and ns.UI.ApplyTheme then
+            ns.UI:ApplyTheme()
+        end
+    end
+    
+    local colors = GetCurrentThemeColors() or {}
     
     -- Background Color Picker
     local bgPicker = CreateColorPicker(
         content,
         "Background Color",
-        db.customBgColor or {0.95, 0.87, 0.69, 1},
+        colors.bgColor or {1, 1, 1, 1},
         function(color)
-            db.customBgColor = color
-            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
-                ns.UI:ApplyTheme()
-            end
+            SetThemeOverride("bgColor", color)
         end
     )
     bgPicker:SetPoint("TOPLEFT", customSection, "BOTTOMLEFT", 10, -10)
@@ -492,12 +518,9 @@ function Config:Build(panel)
     local borderPicker = CreateColorPicker(
         content,
         "Border Color",
-        db.customBorderColor or {0.82, 0.72, 0.50, 1},
+        colors.borderColor or {0.5, 0.5, 0.5, 1},
         function(color)
-            db.customBorderColor = color
-            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
-                ns.UI:ApplyTheme()
-            end
+            SetThemeOverride("borderColor", color)
         end
     )
     borderPicker:SetPoint("TOPLEFT", bgPicker, "BOTTOMLEFT", 0, -10)
@@ -508,42 +531,83 @@ function Config:Build(panel)
     local textPicker = CreateColorPicker(
         content,
         "Text Color",
-        db.customTextColor or {0.20, 0.15, 0.10, 1},
+        colors.textColor or {0.2, 0.2, 0.2, 1},
         function(color)
-            db.customTextColor = color
-            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
-                ns.UI:ApplyTheme()
-            end
+            SetThemeOverride("textColor", color)
         end
     )
     textPicker:SetPoint("TOPLEFT", borderPicker, "BOTTOMLEFT", 0, -10)
     table.insert(customColorPickers, textPicker)
     y = y - 50
     
+    -- Title Color Picker
+    local titlePicker = CreateColorPicker(
+        content,
+        "Title Color",
+        colors.titleColor or {0.3, 0.3, 0.3, 1},
+        function(color)
+            SetThemeOverride("titleColor", color)
+        end
+    )
+    titlePicker:SetPoint("TOPLEFT", textPicker, "BOTTOMLEFT", 0, -10)
+    table.insert(customColorPickers, titlePicker)
+    y = y - 50
+    
     -- Outline Color Picker
     local outlinePicker = CreateColorPicker(
         content,
         "Text Outline Color",
-        db.customOutlineColor or {0, 0, 0, 1},
+        colors.outlineColor or {0, 0, 0, 1},
         function(color)
-            db.customOutlineColor = color
-            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
-                ns.UI:ApplyTheme()
-            end
+            SetThemeOverride("outlineColor", color)
         end
     )
-    outlinePicker:SetPoint("TOPLEFT", textPicker, "BOTTOMLEFT", 0, -10)
+    outlinePicker:SetPoint("TOPLEFT", titlePicker, "BOTTOMLEFT", 0, -10)
     table.insert(customColorPickers, outlinePicker)
-    y = y - 60
+    y = y - 50
     
-    -- Initially disable custom pickers if not on Custom theme
-    local isCustomTheme = (initialThemeIndex == #themeNames)
-    for _, picker in ipairs(customColorPickers) do
-        if not isCustomTheme then
-            picker:SetAlpha(0.4)
-            picker:EnableMouse(false)
+    -- Define the UpdateColorPickers function now that pickers exist
+    UpdateColorPickers = function()
+        local colors = GetCurrentThemeColors() or {}
+        
+        -- Update each picker's button color
+        if bgPicker and bgPicker.button and colors.bgColor then
+            bgPicker.button:SetBackdropColor(unpack(colors.bgColor))
+        end
+        if borderPicker and borderPicker.button and colors.borderColor then
+            borderPicker.button:SetBackdropColor(unpack(colors.borderColor))
+        end
+        if textPicker and textPicker.button and colors.textColor then
+            textPicker.button:SetBackdropColor(unpack(colors.textColor))
+        end
+        if titlePicker and titlePicker.button and colors.titleColor then
+            titlePicker.button:SetBackdropColor(unpack(colors.titleColor))
+        end
+        if outlinePicker and outlinePicker.button and colors.outlineColor then
+            outlinePicker.button:SetBackdropColor(unpack(colors.outlineColor))
         end
     end
+    
+    y = y - 20  -- Extra spacing before reset button
+    
+    -- Reset Colors Button
+    local resetColorsBtn = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
+    resetColorsBtn:SetSize(180, 26)
+    resetColorsBtn:SetPoint("TOPLEFT", outlinePicker, "BOTTOMLEFT", 0, -20)
+    resetColorsBtn:SetText("Reset Theme Colors")
+    resetColorsBtn:SetScript("OnClick", function()
+        local themeIndex = db.theme or 1
+        if db.themeOverrides and db.themeOverrides[themeIndex] then
+            db.themeOverrides[themeIndex] = nil
+        end
+        if ns.UI and ns.UI.ApplyTheme then
+            ns.UI:ApplyTheme()
+        end
+        -- Refresh config panel
+        ReloadUI()
+    end)
+    y = y - 60
+
 
     --------------------------------------------------------
     -- FONT SETTINGS
@@ -573,7 +637,7 @@ function Config:Build(panel)
             ns.UI.frame.text:SetFontObject(db.font)
         end
     end)
-    fontDropdown:SetPoint("TOPLEFT", outlinePicker, "BOTTOMLEFT", 0, -20)
+    fontDropdown:SetPoint("TOPLEFT", resetColorsBtn, "BOTTOMLEFT", 0, -20)
     y = y - 80
 
     local fontSizeSlider = CreateSlider(content, "Font Size", 8, 48, 1, db.fontSize or 18, function(v)
