@@ -28,7 +28,7 @@ IdleLines_Templates_ClassZone = {
             "The desert hums with quiet resilience, mirroring your own.",
             "Shifting dunes echo with distant, ancient memories.",
             "Life hides beneath the sands, waiting for your touch.",
-            "The wind carries faint traces of long‑lost rivers.",
+            "The wind carries faint traces of long lost rivers.",
             "Your presence brings a moment of balance to the harsh expanse.",
             "The desert watches, patient and unyielding.",
         },
@@ -142,7 +142,7 @@ IdleLines_Templates_ClassZone = {
     WARRIOR = {
         forest = {
             "The forest quiets, sensing the strength in your stride.",
-            "Branches sway as if saluting your battle‑hardened presence.",
+            "Branches sway as if saluting your battle hardened presence.",
             "Your footsteps echo with disciplined power.",
             "Even the wilds respect your unyielding resolve.",
             "The forest air sharpens around your focused spirit.",
@@ -669,7 +669,7 @@ IdleLines_Templates_ClassZone = {
     --------------------------------------------------------
     DEMON_HUNTER = {
         forest = {
-            "The forest recoils slightly from your fel‑scarred presence.",
+            "The forest recoils slightly from your fel scarred presence.",
             "Shadows twist as if wary of your burning gaze.",
             "Leaves tremble when your warglaives catch the light.",
             "The wilds sense the predator beneath your calm.",

@@ -13,7 +13,8 @@ local defaults = {
     enabled = true,
 
     -- UI behavior
-    frameScale      = 1.0,
+    frameScaleX     = 1.0,  -- Horizontal scale
+    frameScaleY     = 1.0,  -- Vertical scale
     frameAlpha      = 1.0,  -- Frame transparency (0.0 = invisible, 1.0 = opaque)
     fadeEnabled     = true,
     fadeIn          = 0.3,
@@ -23,6 +24,13 @@ local defaults = {
     delay           = 0,  -- Delay before showing poem (seconds)
     font            = "QuestFont",
     fontSize        = 18,
+    poemLength      = 40, -- Maximum lines in poem (36-44 range)
+
+    -- Custom theme colors
+    customBgColor = {0.95, 0.87, 0.69, 1},      -- Background color
+    customBorderColor = {0.82, 0.72, 0.50, 1},  -- Border color
+    customTextColor = {0.20, 0.15, 0.10, 1},    -- Text color
+    customOutlineColor = {0, 0, 0, 1},          -- Text outline color
 
     -- Position
     framePos = {},

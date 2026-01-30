@@ -96,6 +96,82 @@ local function CreateSlider(parent, label, minVal, maxVal, step, initial, onChan
 end
 
 ------------------------------------------------------------
+-- Helper: Create Color Picker Button
+------------------------------------------------------------
+
+local function CreateColorPicker(parent, label, initialColor, onColorChanged)
+    local container = CreateFrame("Frame", nil, parent)
+    container:SetSize(220, 36)
+    
+    -- Label
+    local labelText = container:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    labelText:SetPoint("TOPLEFT", 0, 0)
+    labelText:SetText(label)
+    
+    -- Color swatch button
+    local button = CreateFrame("Button", nil, container, "BackdropTemplate")
+    button:SetPoint("TOPLEFT", labelText, "BOTTOMLEFT", 0, -4)
+    button:SetSize(32, 32)
+    
+    -- Create backdrop for color display
+    button:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        edgeSize = 12,
+        insets = {left = 2, right = 2, top = 2, bottom = 2}
+    })
+    
+    -- Set initial color
+    button:SetBackdropColor(unpack(initialColor))
+    button:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+    
+    -- Color picker callback
+    button:SetScript("OnClick", function()
+        local r, g, b, a = unpack(initialColor)
+        
+        ColorPickerFrame:SetupColorPickerAndShow({
+            swatchFunc = function()
+                local newR, newG, newB = ColorPickerFrame:GetColorRGB()
+                local newA = ColorPickerFrame:GetColorAlpha()
+                button:SetBackdropColor(newR, newG, newB, newA)
+                
+                -- Update the saved color
+                initialColor[1] = newR
+                initialColor[2] = newG
+                initialColor[3] = newB
+                initialColor[4] = newA
+                
+                -- Call the callback
+                onColorChanged(initialColor)
+            end,
+            hasOpacity = true,
+            opacity = a,
+            r = r,
+            g = g,
+            b = b,
+            cancelFunc = function()
+                -- Restore original color on cancel
+                button:SetBackdropColor(unpack(initialColor))
+            end,
+        })
+    end)
+    
+    -- Hover effect
+    button:SetScript("OnEnter", function(self)
+        self:SetBackdropBorderColor(1, 1, 1, 1)
+    end)
+    
+    button:SetScript("OnLeave", function(self)
+        self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
+    end)
+    
+    container.button = button
+    container.label = labelText
+    
+    return container
+end
+
+------------------------------------------------------------
 -- Custom Modern Dropdown 
 ------------------------------------------------------------
 
@@ -240,7 +316,7 @@ StaticPopupDialogs["IDLELINES_RESET_CONFIRM"] = {
 }
 
 ------------------------------------------------------------
--- Slash Commands
+-- Slash Command Registration
 ------------------------------------------------------------
 
 local function RegisterSlashCommands()
@@ -250,7 +326,7 @@ local function RegisterSlashCommands()
         msg = msg:lower()
 
         if msg == "" then
-            Settings.OpenToCategory(ns.settingsCategory.ID)
+            Settings.OpenToCategory(ns.settingsCategory:GetID())
             return
         end
 
@@ -280,18 +356,18 @@ local function RegisterSlashCommands()
 end
 
 ------------------------------------------------------------
--- Build Full Config Panel
+-- Build Configuration Panel
 ------------------------------------------------------------
 
 function Config:Build(panel)
     local content = CreateScrollContainer(panel)
-    local y = -10
+    local y = 0
 
     --------------------------------------------------------
     -- GENERAL SECTION
     --------------------------------------------------------
 
-    local general = CreateSection(content, "General", y)
+    local general = CreateSection(content, "General Settings", y)
     y = y - 40
 
     local enableCB = CreateCheckbox(content, "Enable IdleLines", db.enabled ~= false, function(v)
@@ -306,10 +382,16 @@ function Config:Build(panel)
     delaySlider:SetPoint("TOPLEFT", enableCB, "BOTTOMLEFT", 0, -30)
     y = y - 60
 
+    local poemLengthSlider = CreateSlider(content, "Poem Length (lines)", 5, 44, 1, db.poemLength or 40, function(v)
+        db.poemLength = v
+    end)
+    poemLengthSlider:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", 0, -30)
+    y = y - 60
+
     local fadeInSlider = CreateSlider(content, "Fade-In Duration", 0, 3, 0.1, db.fadeIn or 0.3, function(v)
         db.fadeIn = v
     end)
-    fadeInSlider:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", 0, -30)
+    fadeInSlider:SetPoint("TOPLEFT", poemLengthSlider, "BOTTOMLEFT", 0, -30)
     y = y - 60
 
     local fadeOutSlider = CreateSlider(content, "Fade-Out Duration", 0, 3, 0.1, db.fadeOut or 0.3, function(v)
@@ -353,6 +435,9 @@ function Config:Build(panel)
         themeDesc:SetText(themeDescriptions[initialThemeIndex])
     end
     
+    -- Store references to custom color pickers (created later)
+    local customColorPickers = {}
+    
     local themeDropdown = CreateModernDropdown(content, "Theme", themeNames, initialThemeIndex, function(index, name)
         db.theme = index
         if ns.UI and ns.UI.ApplyTheme then
@@ -362,11 +447,107 @@ function Config:Build(panel)
         if themeDescriptions[index] then
             themeDesc:SetText(themeDescriptions[index])
         end
+        
+        -- Enable/disable custom color pickers based on theme
+        local isCustom = (name == "Custom")
+        for _, picker in ipairs(customColorPickers) do
+            if isCustom then
+                picker:SetAlpha(1.0)
+                picker:EnableMouse(true)
+            else
+                picker:SetAlpha(0.4)
+                picker:EnableMouse(false)
+            end
+        end
     end)
     themeDropdown:SetPoint("TOPLEFT", appearance, "BOTTOMLEFT", 10, -10)
     y = y - 80
     
     y = y - 30
+
+    --------------------------------------------------------
+    -- CUSTOM THEME COLORS (Only active when Custom theme selected)
+    --------------------------------------------------------
+    
+    local customSection = CreateSection(content, "Custom Theme Colors", y)
+    y = y - 40
+    
+    -- Background Color Picker
+    local bgPicker = CreateColorPicker(
+        content,
+        "Background Color",
+        db.customBgColor or {0.95, 0.87, 0.69, 1},
+        function(color)
+            db.customBgColor = color
+            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
+                ns.UI:ApplyTheme()
+            end
+        end
+    )
+    bgPicker:SetPoint("TOPLEFT", customSection, "BOTTOMLEFT", 10, -10)
+    table.insert(customColorPickers, bgPicker)
+    y = y - 50
+    
+    -- Border Color Picker
+    local borderPicker = CreateColorPicker(
+        content,
+        "Border Color",
+        db.customBorderColor or {0.82, 0.72, 0.50, 1},
+        function(color)
+            db.customBorderColor = color
+            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
+                ns.UI:ApplyTheme()
+            end
+        end
+    )
+    borderPicker:SetPoint("TOPLEFT", bgPicker, "BOTTOMLEFT", 0, -10)
+    table.insert(customColorPickers, borderPicker)
+    y = y - 50
+    
+    -- Text Color Picker
+    local textPicker = CreateColorPicker(
+        content,
+        "Text Color",
+        db.customTextColor or {0.20, 0.15, 0.10, 1},
+        function(color)
+            db.customTextColor = color
+            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
+                ns.UI:ApplyTheme()
+            end
+        end
+    )
+    textPicker:SetPoint("TOPLEFT", borderPicker, "BOTTOMLEFT", 0, -10)
+    table.insert(customColorPickers, textPicker)
+    y = y - 50
+    
+    -- Outline Color Picker
+    local outlinePicker = CreateColorPicker(
+        content,
+        "Text Outline Color",
+        db.customOutlineColor or {0, 0, 0, 1},
+        function(color)
+            db.customOutlineColor = color
+            if ns.UI and ns.UI.ApplyTheme and db.theme == #ns.UI.Themes then
+                ns.UI:ApplyTheme()
+            end
+        end
+    )
+    outlinePicker:SetPoint("TOPLEFT", textPicker, "BOTTOMLEFT", 0, -10)
+    table.insert(customColorPickers, outlinePicker)
+    y = y - 60
+    
+    -- Initially disable custom pickers if not on Custom theme
+    local isCustomTheme = (initialThemeIndex == #themeNames)
+    for _, picker in ipairs(customColorPickers) do
+        if not isCustomTheme then
+            picker:SetAlpha(0.4)
+            picker:EnableMouse(false)
+        end
+    end
+
+    --------------------------------------------------------
+    -- FONT SETTINGS
+    --------------------------------------------------------
 
     -- Modern dropdown
     local fontItems = { "Quest Font", "Game Font Normal", "Game Font Highlight", "Game Font Large", "Fancy Book Font", "Dialog Font" }
@@ -392,7 +573,7 @@ function Config:Build(panel)
             ns.UI.frame.text:SetFontObject(db.font)
         end
     end)
-    fontDropdown:SetPoint("TOPLEFT", themeDesc, "BOTTOMLEFT", -10, -10)
+    fontDropdown:SetPoint("TOPLEFT", outlinePicker, "BOTTOMLEFT", 0, -20)
     y = y - 80
 
     local fontSizeSlider = CreateSlider(content, "Font Size", 8, 48, 1, db.fontSize or 18, function(v)
@@ -408,7 +589,7 @@ function Config:Build(panel)
         db.frameAlpha = v
         if ns.UI then ns.UI:ApplySettings() end
     end)
-    alphaSlider:SetPoint("TOPLEFT", fontSizeSlider, "BOTTOMLEFT", 0, -20)
+    alphaSlider:SetPoint("TOPLEFT", fontSizeSlider, "BOTTOMLEFT", 0, -30)
     y = y - 60
 
     --------------------------------------------------------
@@ -432,26 +613,31 @@ function Config:Build(panel)
     y = y - 60
 
     --------------------------------------------------------
-    -- EXPORT SECTION
-    --------------------------------------------------------
-
-    --------------------------------------------------------
     -- FRAME POSITION SECTION
     --------------------------------------------------------
 
-    local moverSection = CreateSection(content, "Frame Position", y)
+    local moverSection = CreateSection(content, "Frame Position & Scale", y)
     y = y - 40
 
-    local scaleSlider = CreateSlider(content, "Frame Scale", 0.5, 2.0, 0.05, db.frameScale or 1.0, function(v)
-        db.frameScale = v
+    -- Horizontal Scale
+    local scaleXSlider = CreateSlider(content, "Horizontal Scale", 0.5, 2.0, 0.05, db.frameScaleX or 1.0, function(v)
+        db.frameScaleX = v
         if ns.UI then ns.UI:ApplySettings() end
     end)
-    scaleSlider:SetPoint("TOPLEFT", moverSection, "BOTTOMLEFT", 10, -10)
+    scaleXSlider:SetPoint("TOPLEFT", moverSection, "BOTTOMLEFT", 10, -10)
+    y = y - 60
+
+    -- Vertical Scale
+    local scaleYSlider = CreateSlider(content, "Vertical Scale", 0.5, 2.0, 0.05, db.frameScaleY or 1.0, function(v)
+        db.frameScaleY = v
+        if ns.UI then ns.UI:ApplySettings() end
+    end)
+    scaleYSlider:SetPoint("TOPLEFT", scaleXSlider, "BOTTOMLEFT", 0, -30)
     y = y - 60
 
     local unlockBtn = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
     unlockBtn:SetSize(180, 26)
-    unlockBtn:SetPoint("TOPLEFT", scaleSlider, "BOTTOMLEFT", 2, -20)
+    unlockBtn:SetPoint("TOPLEFT", scaleYSlider, "BOTTOMLEFT", 2, -20)
     unlockBtn:SetText("Unlock Frame")
 
     local lockBtn = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")

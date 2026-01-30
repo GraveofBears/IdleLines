@@ -182,7 +182,7 @@ IdleLines_Templates_Seasonal = {
 		"Warm breezes carry distant songs.",
 		"The world feels lighter beneath the summer heat.",
 		"Sparks swirl upward in fiery spirals.",
-		"The air glows with ember‑bright magic.",
+		"The air glows with ember bright magic.",
 		"The night feels endless, warm, and welcoming.",
 		"Midsummer wraps the world in golden fire.",
 		"The flames dance as if celebrating your presence.",

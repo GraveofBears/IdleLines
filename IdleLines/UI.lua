@@ -121,6 +121,24 @@ UI.Themes = {
         textColor = {0.90, 0.80, 0.50, 1},     -- warm readable brown
         titleColor = {0.95, 0.85, 0.55, 1},    -- strong parchment header
     },
+
+    ------------------------------------------------------------
+    -- CUSTOM THEME (uses saved colors from DB)
+    ------------------------------------------------------------
+    {
+        name = "Custom",
+        description = "Fully customizable colors - configure in settings below",
+        bgFile = "Interface\\Buttons\\WHITE8x8",  -- solid color background
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+        tileSize = 1,
+        edgeSize = 32,
+        -- Colors will be overridden by DB values
+        bgColor = {0.95, 0.87, 0.69, 1},
+        borderColor = {0.82, 0.72, 0.50, 1},
+        textColor = {0.20, 0.15, 0.10, 1},
+        titleColor = {0.28, 0.20, 0.10, 1},
+        isCustom = true,  -- flag to identify custom theme
+    },
 }
 
 local function GetDB()
@@ -244,10 +262,19 @@ function UI:CreateFrame()
     text:SetShadowColor(0, 0, 0, 0.6)
 
     --------------------------------------------------------
-    -- Scaling
+    -- Scaling (separate X and Y)
     --------------------------------------------------------
 
-    frame:SetScale(db.frameScale or 1.0)
+    local scaleX = db.frameScaleX or 1.0
+    local scaleY = db.frameScaleY or 1.0
+    frame:SetScale(1.0)  -- Reset to 1.0 base
+    
+    -- Store original size
+    frame.baseWidth = 700
+    frame.baseHeight = 650
+    
+    -- Apply separate scaling
+    frame:SetSize(frame.baseWidth * scaleX, frame.baseHeight * scaleY)
 
     --------------------------------------------------------
     -- Movable Frame
@@ -292,6 +319,21 @@ function UI:ApplyTheme()
         theme = self.Themes[1]
     end
     
+    -- If custom theme, use DB colors
+    local bgColor, borderColor, textColor, titleColor
+    
+    if theme.isCustom then
+        bgColor = db.customBgColor or theme.bgColor
+        borderColor = db.customBorderColor or theme.borderColor
+        textColor = db.customTextColor or theme.textColor
+        titleColor = textColor  -- Use same as text for custom
+    else
+        bgColor = theme.bgColor
+        borderColor = theme.borderColor
+        textColor = theme.textColor
+        titleColor = theme.titleColor
+    end
+    
     -- Apply backdrop
     frame:SetBackdrop({
         bgFile   = theme.bgFile,
@@ -303,24 +345,23 @@ function UI:ApplyTheme()
     })
     
     -- Apply colors (with full opacity - transparency applied later in ApplySettings)
-    local bgColor = theme.bgColor
     frame:SetBackdropColor(bgColor[1], bgColor[2], bgColor[3], 1.0)
-    
-    local borderColor = theme.borderColor
     frame:SetBackdropBorderColor(borderColor[1], borderColor[2], borderColor[3], 1.0)
     
     -- Apply title color
     if frame.title then
-        frame.title:SetTextColor(unpack(theme.titleColor))
+        frame.title:SetTextColor(unpack(titleColor))
     end
     
     -- Apply text color (static text)
     if frame.text then
-        frame.text:SetTextColor(unpack(theme.textColor))
+        frame.text:SetTextColor(unpack(textColor))
     end
     
-    -- Store theme for FadeInLines to use
+    -- Store theme and colors for FadeInLines to use
     self.currentTheme = theme
+    self.currentTextColor = textColor
+    self.currentOutlineColor = db.customOutlineColor or {0, 0, 0, 1}
 end
 
 ------------------------------------------------------------
@@ -384,14 +425,15 @@ function UI:FadeInLines(poem)
         -- Apply font settings with proper font file
         fs:SetFont(fontFile, fontSize, fontFlags)
         
-        -- Apply theme text color
-        local theme = self.currentTheme or self.Themes[1]
-        fs:SetTextColor(unpack(theme.textColor))
+        -- Apply text color
+        local textColor = self.currentTextColor or {0.20, 0.15, 0.10, 1}
+        fs:SetTextColor(unpack(textColor))
         fs:SetAlpha(0)
         
-        -- Add shadow for readability
+        -- Apply outline/shadow
+        local outlineColor = self.currentOutlineColor or {0, 0, 0, 1}
         fs:SetShadowOffset(1, -1)
-        fs:SetShadowColor(0, 0, 0, 0.6)
+        fs:SetShadowColor(outlineColor[1], outlineColor[2], outlineColor[3], 0.6)
 
         table.insert(container.lines, fs)
 
@@ -488,7 +530,15 @@ function UI:ApplySettings()
     local frame = self.frame
     local db = GetDB()
 
-    frame:SetScale(db.frameScale or 1.0)
+    -- Apply separate X/Y scaling
+    local scaleX = db.frameScaleX or 1.0
+    local scaleY = db.frameScaleY or 1.0
+    
+    frame.baseWidth = frame.baseWidth or 700
+    frame.baseHeight = frame.baseHeight or 650
+    
+    frame:SetSize(frame.baseWidth * scaleX, frame.baseHeight * scaleY)
+    
     self:ApplyTheme()
     self:ApplyFontSettings()
     

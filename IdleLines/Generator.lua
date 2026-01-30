@@ -243,49 +243,84 @@ local function Pick(t, used)
 end
 
 ------------------------------------------------------------
--- Generate Contextual Title
+-- Generate Contextual Title (Content-Aware)
 ------------------------------------------------------------
 
-local function GenerateTitle(context)
-    local candidates = {}
+local function GenerateTitle(context, poemLines)
+    -- Analyze the poem content for keywords
+    local poemText = table.concat(poemLines, " "):lower()
     
-    -- Always include general titles
-    for _, title in ipairs(titleTemplates.general) do
-        table.insert(candidates, title)
-    end
+    local keywords = {
+        -- Combat/Battle
+        battle = {"blade", "steel", "armor", "battle", "war", "weapon", "strike", "charge", "fury", "rage", "victory"},
+        light = {"light", "holy", "radiance", "blessed", "sacred", "prayer", "faith", "glow"},
+        shadow = {"shadow", "dark", "void", "whisper", "fel", "demon", "corrupt"},
+        nature = {"wild", "forest", "leaf", "tree", "root", "earth", "druid", "green", "growth"},
+        arcane = {"arcane", "magic", "spell", "weave", "shimmer", "frost", "fire", "mage"},
+        hunt = {"hunt", "track", "arrow", "companion", "beast", "bow", "wild", "prey"},
+        death = {"grave", "frost", "undead", "scourge", "chill", "death", "cold", "bone"},
+        storm = {"storm", "thunder", "lightning", "wind", "element", "totem", "spirit"},
+        stealth = {"stealth", "dagger", "rogue", "silence", "vanish", "pick", "secret"},
+        peace = {"peace", "calm", "still", "quiet", "rest", "breath", "serene", "gentle"},
+        memory = {"remember", "memory", "echo", "linger", "past", "forgotten", "recall"},
+        journey = {"path", "journey", "wander", "road", "travel", "horizon", "distance"},
+        time = {"time", "moment", "age", "ancient", "eternal", "forever", "dawn", "dusk"},
+        dream = {"dream", "vision", "sleep", "emerald", "nightmare"},
+    }
     
-    -- Add context-specific titles (weighted 3x by adding multiple times)
-    if context.class and titleTemplates[context.class] then
-        for _, title in ipairs(titleTemplates[context.class]) do
-            table.insert(candidates, title)
-            table.insert(candidates, title)
-            table.insert(candidates, title)
+    -- Count keyword matches
+    local scores = {}
+    for category, words in pairs(keywords) do
+        scores[category] = 0
+        for _, word in ipairs(words) do
+            local _, count = poemText:gsub(word, word)
+            scores[category] = scores[category] + count
         end
     end
     
-    if context.timeKey and titleTemplates[context.timeKey] then
-        for _, title in ipairs(titleTemplates[context.timeKey]) do
-            table.insert(candidates, title)
-            table.insert(candidates, title)
+    -- Find dominant theme
+    local maxScore = 0
+    local dominantTheme = "peace" -- default
+    for category, score in pairs(scores) do
+        if score > maxScore then
+            maxScore = score
+            dominantTheme = category
         end
     end
     
-    if context.zoneKey and titleTemplates[context.zoneKey] then
-        for _, title in ipairs(titleTemplates[context.zoneKey]) do
-            table.insert(candidates, title)
-            table.insert(candidates, title)
-        end
+    -- Title templates based on poem content
+    local contentTitles = {
+        battle = {"Echoes of War", "Steel and Resolve", "The Warrior's Path", "Songs of Battle", "Armored Reflections"},
+        light = {"Radiant Moments", "The Light's Embrace", "Sacred Stillness", "Blessed Quietude", "Holy Reflections"},
+        shadow = {"Shadows Gather", "Whispers in Darkness", "The Void's Call", "Dark Musings", "Shadowed Thoughts"},
+        nature = {"Among the Wilds", "Nature's Breath", "The Green Dream", "Roots and Branches", "Wild Reflections"},
+        arcane = {"Arcane Musings", "The Weave Unravels", "Magical Moments", "Spellbound Thoughts", "Mystic Reflections"},
+        hunt = {"The Hunter's Rest", "Tracks and Trails", "Wild Companions", "The Patient Aim", "Predator's Pause"},
+        death = {"Grave Thoughts", "Frost and Memory", "The Cold Embrace", "Undying Reflections", "Beyond the Veil"},
+        storm = {"Elemental Calm", "Storm's Eye", "Thunder's Echo", "The Shaman's Vision", "Spirits Whisper"},
+        stealth = {"Shadows and Secrets", "The Rogue's Repose", "Silent Thoughts", "Veiled Moments", "Whispered Words"},
+        peace = {"Peaceful Interlude", "Moments of Calm", "Quiet Contemplation", "Stillness Speaks", "Serene Thoughts"},
+        memory = {"Echoes of Yesterday", "Memories Linger", "Fragments of Time", "The Past Whispers", "Remembered Moments"},
+        journey = {"The Road Ahead", "Wanderer's Rest", "Paths Untraveled", "Journey's Pause", "Horizons Call"},
+        time = {"Timeless Moments", "The Passage of Hours", "Ancient Echoes", "Eternal Reflections", "Dawn to Dusk"},
+        dream = {"Dream's Edge", "The Emerald Reverie", "Visions Unfolding", "Sleeping Thoughts", "Dream Walker"},
+    }
+    
+    -- Get title from dominant theme
+    local titleList = contentTitles[dominantTheme] or contentTitles.peace
+    local selectedTitle = titleList[math.random(1, #titleList)]
+    
+    -- Add contextual flavor if available
+    if context.zone then
+        local zoneInfluence = {
+            ["Peace"] = selectedTitle,
+            ["Orgrimmar"] = selectedTitle,
+            ["Stormwind"] = selectedTitle,
+        }
+        selectedTitle = zoneInfluence[context.zone] or selectedTitle
     end
     
-    if context.seasonKey and titleTemplates[context.seasonKey] then
-        for _, title in ipairs(titleTemplates[context.seasonKey]) do
-            table.insert(candidates, title)
-            table.insert(candidates, title)
-            table.insert(candidates, title)
-        end
-    end
-    
-    return candidates[math.random(1, #candidates)]
+    return selectedTitle
 end
 
 ------------------------------------------------------------
@@ -487,14 +522,6 @@ function Generator:BuildPoem()
     local seasonKey = GetSeasonKey()
     local r         = ns.recent or {}
 
-    -- Generate contextual title
-    local title = GenerateTitle({
-        class = classKey,
-        zoneKey = zoneKey,
-        timeKey = timeKey,
-        seasonKey = seasonKey,
-    })
-
     local poem = {}
     local used = {}
 
@@ -502,7 +529,7 @@ function Generator:BuildPoem()
     -- Line count control
     --------------------------------------------------------
     local lineCount = 0
-    local maxLines  = 40
+    local maxLines  = (ns.db and ns.db.poemLength) or 40
 
     local function safe(fn)
         if lineCount < maxLines then
@@ -560,6 +587,17 @@ function Generator:BuildPoem()
     if poem[#poem] == "" then
         table.remove(poem, #poem)
     end
+
+    --------------------------------------------------------
+    -- Generate title AFTER poem is built (content-aware)
+    --------------------------------------------------------
+    local title = GenerateTitle({
+        class = classKey,
+        zoneKey = zoneKey,
+        timeKey = timeKey,
+        seasonKey = seasonKey,
+        zone = ns.currentZone,
+    }, poem)
 
     return table.concat(poem, "\n"), title
 end
