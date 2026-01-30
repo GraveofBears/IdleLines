@@ -131,25 +131,69 @@ Themes are tuned for readability across both bright and dark backgrounds and are
 
 ---
 
-## 🧾 How Poems Are Generated
+### 🧾 How Poems Are Generated
 
-IdleLines does not display static quotes.
+IdleLines does not display static quotes and does not collect or transmit any personal or identifying data.
 
-Instead, poems are **procedurally assembled** from a large library of handcrafted templates and fragments.
+Poems are **procedurally assembled** from a large library of handcrafted templates and fragments, generated locally at runtime to create varied, atmospheric text.
 
-The generation system works by:
+#### What data is used
+
+IdleLines uses a limited set of **non-identifying, in-game context signals** provided by the World of Warcraft API, including:
+
+- the player’s **class** (for thematic tone)
+- the player’s **faction** (Alliance / Horde, where applicable)
+- the player’s **current zone or area** (to select environment-appropriate templates)
+- **time of day** (day / night context for mood and atmosphere)
+- **recent loot events** (used only for light flavor text, not item evaluation)
+- whether the player is **idle or inactive**
+- the addon’s own configuration settings (theme, font, scale, timing)
+
+This information is used solely to:
+- select relevant poetic templates
+- subtly adjust tone, mood, and atmosphere
+- provide light environmental or situational flavor
+- determine when poems should appear
+
+#### What data is *not* used
+
+IdleLines **does not**:
+
+- read or analyze chat messages
+- access or display player names, realms, or guilds
+- inspect item stats, values, or equipment
+- track quests, achievements, or combat performance
+- store behavioral history or long-term activity
+- transmit data outside the game
+- use analytics, telemetry, or external services
+
+#### Saved data
+
+IdleLines **does not store any generated text or gameplay context**.
+
+The only data saved to disk are **user configuration settings** (such as theme selection, font choice, scale, and timing), stored via standard WoW SavedVariables.
+
+No poems, events, zones, loot, or player behavior data are written to SavedVariables.
+
+All poem generation occurs **entirely in memory** and is discarded once displayed.
+
+#### How generation works
+
+The poem system works by:
 - selecting an overall structure (opening, body, closing)
-- layering multiple template fragments together
+- choosing template fragments based on available context (such as zone, time of day, or recent events)
+- layering multiple fragments together
 - varying phrasing, cadence, and rhythm
 - avoiding immediate repetition
-- preserving a consistent, atmospheric tone
+- maintaining a consistent, ambient tone
 
 The result is poetry that feels:
+- responsive without being intrusive  
 - ambient rather than distracting  
-- reflective rather than random  
-- organic instead of mechanical  
+- reflective instead of mechanical  
 
-With thousands of possible combinations, poems remain fresh even over long play sessions.
+With thousands of possible combinations, poems remain fresh even across long play sessions.
+
 
 ---
 
