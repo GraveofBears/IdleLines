@@ -1,6 +1,6 @@
 # IdleLines
 
-**IdleLines** is a lightweight World of Warcraft addon that displays atmospheric, poetic text inside a beautifully styled, book-like frame. Lines fade in one by one, creating a calm, immersive reading experience while you’re idle, traveling, waiting, or simply in the mood for something ambient and reflective.
+**IdleLines** is a lightweight World of Warcraft addon that displays atmospheric, poetic text inside a beautifully styled, Warcraft themed frame. Lines fade in one by one, creating a calm, immersive reading experience while you’re AFK or simply in the mood for something ambient and reflective.
 
 What began as a small idle flavor addon has evolved into a **fully customizable poetic display system**, featuring deeply themed visual styles and **thousands of handcrafted, evocative lines** generated from layered templates.
 
