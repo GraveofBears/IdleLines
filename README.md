@@ -1,33 +1,38 @@
 # IdleLines
 
-IdleLines is a lightweight World of Warcraft addon that displays atmospheric, poetic lines inside a beautifully styled tome‑like frame. Each line fades in one by one, creating a calm, immersive storytelling effect while you’re idle, waiting, or simply in the mood for something ambient.
+**IdleLines** is a lightweight World of Warcraft addon that displays atmospheric, poetic text inside a beautifully styled, book-like frame. Lines fade in one by one, creating a calm, immersive reading experience while you’re idle, traveling, waiting, or simply in the mood for something ambient and reflective.
 
-The addon is fully customizable themes, fonts, scaling, fade timing, and more.
+What began as a small idle flavor addon has evolved into a **fully customizable poetic display system**, featuring deeply themed visual styles and **thousands of handcrafted, evocative lines** generated from layered templates.
+
+IdleLines is built entirely with the Blizzard API — no external libraries, no custom assets — designed to feel native, quiet, and unobtrusive.
 
 ---
 
 ## ✨ Features
 
-- 📜 **Fade‑in line‑by‑line animation**  
-  Each line appears with a gentle typewriter‑style reveal.
+- 📜 **Line-by-line fade-in animation**  
+  Text appears gradually for a gentle, readable flow.
 
-- 🎨 **Multiple built‑in themes**  
-  Includes parchment, stone, wood, marble, and mission table styles.
+- 📖 **Tome-style display frame**  
+  Movable, resizable, and scalable — fits naturally into any UI layout.
 
-- 🖋️ **Customizable fonts & sizes**  
-  Choose any WoW font object and adjust the size to your liking.
+- 🎨 **Advanced theme system**  
+  Themes control backgrounds, borders, colors, outlines, tiling, and spacing.
 
-- 🪶 **Export poems with one click**  
-  Built‑in export window lets you copy the full poem instantly.
+- 🖋️ **Customizable fonts & typography**  
+  Choose any WoW font object and adjust size and presentation.
 
-- 🪟 **Movable, resizable, and scalable frame**  
-  The tome can be positioned anywhere and scaled to fit your UI.
+- 🧠 **Massive poetic template library**  
+  Thousands of lines generated from layered templates for variety and tone.
 
-- 🌙 **Optional fade‑out on hide**  
-  Smoothly fades away after a configurable delay.
+- 🪶 **One-click poem export**  
+  Instantly copy the full poem via a built-in export window.
 
-- ⚙️ **Lightweight, modular, and Blizzard‑native**  
-  No external libraries, no custom textures — pure WoW API.
+- 🌙 **Optional fade-out behavior**  
+  Automatically fades the tome after a configurable delay.
+
+- ⚙️ **Lightweight & Blizzard-native**  
+  No dependencies, minimal overhead, pure WoW API.
 
 ---
 
@@ -36,67 +41,127 @@ The addon is fully customizable themes, fonts, scaling, fade timing, and more.
 1. Download the addon folder.
 2. Place it into:
 
-`World of Warcraft/retail/Interface/AddOns/`
+```
+World of Warcraft/retail/Interface/AddOns/
+```
 
-
-3. Restart WoW or reload your UI with `/reload`.
+3. Restart WoW or reload your UI.
 
 ---
 
 ## 🔧 Slash Commands
 
+```
+/idle
+```
+Opens the IdleLines configuration panel.
 
-`/idle` - Opens the configuration panel
+```
+/idle test
+```
+Generates and displays a test poem immediately.
 
-`/idle test` - Shows a test poem
+```
+/idle hide
+```
+Hides the current poem frame.
 
-`/idle hide` - Hides the poem
-
-`/idle reset` - Resets settings to defaults
-
-These open the configuration panel where you can:
-
-- Change themes  
-- Adjust font & size  
-- Set frame scale  
-- Enable/disable fade‑out  
-- Move or reset the frame  
+```
+/idle reset
+```
+Resets all IdleLines settings to their defaults.
 
 ---
 
 ## 🎨 Themes Included
 
-IdleLines ships with multiple handcrafted themes:
+IdleLines ships with multiple handcrafted themes, selectable from the configuration UI:
 
-- Classic Parchment  
-- Faded Parchment  
-- Dark Sandstone  
-- Mahogany Wood  
-- Dark Marble  
-- Rough Stone  
-- Bank Ledger Parchment  
-- Mission Table Parchment
-- Custom 
+- **Dark**  
+  Minimal dark styling with soft gray trim.
 
-Each theme includes tuned:
+- **DeathKnight**  
+  Frost-tinted stone and icy blues inspired by Death Knight artifacts.
 
-- background texture  
-- border style  
+- **DemonHunter**  
+  Fel-touched greens and purples with high-contrast accents.
+
+- **Druid**  
+  Natural tones inspired by bark, leaves, and ancient druidic relics.
+
+- **Hunter**  
+  Earthy greens and muted golds with a rugged, outdoors feel.
+
+- **Mage**  
+  Cool arcane blues with a clean, crystalline presentation.
+
+- **Monk**  
+  Jade and gold tones inspired by Pandarian aesthetics.
+
+- **Paladin**  
+  Holy gold and soft rose accents with a radiant feel.
+
+- **Priest**  
+  Clean whites and light neutrals for a calm, reverent presentation.
+
+- **ShadowPriest**  
+  Void-touched purples with darker, ominous accents.
+
+- **Rogue**  
+  Deep crimson tones with sharp contrast and subtle menace.
+
+- **Shaman**  
+  Elemental blues inspired by water, wind, and storm.
+
+- **Warlock**  
+  Fel and void purples with arcane contrast.
+
+- **Warrior**  
+  Warm bronze and iron tones inspired by weapons and armor.
+
+Each theme defines:
+- background atlas or texture  
+- border style and edge sizing  
 - text color  
 - title color  
-- tile size & edge size  
+- outline color  
+- tiling and padding behavior  
+
+Themes are tuned for readability across both bright and dark backgrounds and are designed to be easily extended.
+
+---
+
+## 🧾 How Poems Are Generated
+
+IdleLines does not display static quotes.
+
+Instead, poems are **procedurally assembled** from a large library of handcrafted templates and fragments.
+
+The generation system works by:
+- selecting an overall structure (opening, body, closing)
+- layering multiple template fragments together
+- varying phrasing, cadence, and rhythm
+- avoiding immediate repetition
+- preserving a consistent, atmospheric tone
+
+The result is poetry that feels:
+- ambient rather than distracting  
+- reflective rather than random  
+- organic instead of mechanical  
+
+With thousands of possible combinations, poems remain fresh even over long play sessions.
 
 ---
 
 ## 📤 Exporting Poems
 
-Click **Copy Poem** at the bottom of the tome window to open the export popup.  
-The popup includes:
+Click **Copy Poem** at the bottom of the tome window to open the export popup.
 
-- full poem text  
-- title  
-- auto-highlight  
-- easy copy/paste  
+The export window includes:
+- the full generated poem  
+- the current title  
+- automatic text highlighting  
+- easy copy & paste for sharing or saving  
 
 ---
 
@@ -109,4 +174,7 @@ Feel free to fork, modify, or build on top of IdleLines.
 
 ## ❤️ Credits
 
-Created by Gravebear
+Created by **Gravebear**
+
+- GitHub: https://github.com/GraveofBears  
+- Support the project: https://buymeacoffee.com/gravebear
