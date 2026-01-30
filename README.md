@@ -46,10 +46,13 @@ The addon is fully customizable themes, fonts, scaling, fade timing, and more.
 ## 🔧 Slash Commands
 
 
-`/idle test` Generate Poem at any time.
+`/idle` - Opens the configuration panel
 
-`/idle` Open Options Settins.
+`/idle test` - Shows a test poem
 
+`/idle hide` - Hides the poem
+
+`/idle reset` - Resets settings to defaults
 
 These open the configuration panel where you can:
 
@@ -72,7 +75,8 @@ IdleLines ships with multiple handcrafted themes:
 - Dark Marble  
 - Rough Stone  
 - Bank Ledger Parchment  
-- Mission Table Parchment  
+- Mission Table Parchment
+- Custom 
 
 Each theme includes tuned:
 
