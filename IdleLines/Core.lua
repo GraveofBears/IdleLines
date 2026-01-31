@@ -22,7 +22,7 @@ local defaults = {
     soundEnabled    = true,
     theme           = 1,  -- Default to "Classic Parchment"
     delay           = 0,  -- Delay before showing poem (seconds)
-    font            = "QuestFont",
+    font            = "Fonts\\FRIZQT__.TTF",
     fontSize        = 18,
     poemLength      = 40, -- Maximum lines in poem (5-44 range)
 

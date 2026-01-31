@@ -512,7 +512,7 @@ function UI:CreateFrame()
 
     local container = CreateFrame("Frame", nil, frame)
     frame.container = container
-    container:SetPoint("TOPLEFT", 35, -85)
+    container:SetPoint("TOPLEFT", 35, -110)
     container:SetPoint("BOTTOMRIGHT", -35, 30)
     container:SetSize(1, 1)
 
@@ -681,12 +681,26 @@ function UI:FadeInLines(poem)
     
     -- Apply current font settings to measurement FS
     local db = GetDB()
-    local fontObjectName = db.font or "QuestFont"
+    local fontSetting = db.font or "Fonts\\FRIZQT__.TTF"
     local fontSize = db.fontSize or 18
     
-    -- Get the font object and extract font file
-    local fontObj = _G[fontObjectName] or QuestFont
-    local fontFile, _, fontFlags = fontObj:GetFont()
+    local fontFile, fontFlags
+    
+    -- Check if it's a file path (contains backslash or forward slash)
+    if fontSetting:match("[/\\]") then
+        -- It's a font file path
+        fontFile = fontSetting
+        fontFlags = "OUTLINE"
+    else
+        -- It's a font object name
+        local fontObj = _G[fontSetting]
+        if not fontObj then
+            fontFile = "Fonts\\FRIZQT__.TTF" -- Fallback
+            fontFlags = "OUTLINE"
+        else
+            fontFile, _, fontFlags = fontObj:GetFont()
+        end
+    end
     
     frame.measureFS:SetFont(fontFile, fontSize, fontFlags)
 
@@ -701,21 +715,22 @@ function UI:FadeInLines(poem)
 
     for _, line in ipairs(lines) do
 
-        -- Measure height using hidden FS
-        frame.measureFS:SetText(line)
-        local h = frame.measureFS:GetStringHeight()
-
-        -- Create visible FS
-        local fs = container:CreateFontString(nil, "OVERLAY", "QuestFont")
+        -- Create visible FS first
+        local fs = container:CreateFontString(nil, "OVERLAY")
         fs:SetPoint("TOPLEFT", 0, -yOffset)
         fs:SetPoint("TOPRIGHT", 0, -yOffset)
         fs:SetJustifyH("CENTER")
         fs:SetJustifyV("TOP")
         fs:SetWordWrap(true)
+        
+        -- Apply font settings with proper font file FIRST (before SetText)
+        fs:SetFont(fontFile, fontSize, fontFlags)
+        
+        -- NOW set text after font is applied
         fs:SetText(line)
         
-        -- Apply font settings with proper font file
-        fs:SetFont(fontFile, fontSize, fontFlags)
+        -- NOW measure height after font and text are both set
+        local h = fs:GetStringHeight()
         
         -- Apply text color
         local textColor = self.currentTextColor or {0.20, 0.15, 0.10, 1}
@@ -908,17 +923,31 @@ function UI:ApplyFontSettings()
     local frame = self.frame
     local db = GetDB()
     
-    local fontObjectName = db.font or "QuestFont"
+    local fontSetting = db.font or "Fonts\\FRIZQT__.TTF"
     local fontSize = db.fontSize or 18
     
-    -- Get the font object
-    local fontObject = _G[fontObjectName]
-    if not fontObject then
-        fontObject = QuestFont -- Fallback
+    local fontFile, fontFlags
+    
+    -- Check if it's a file path (contains backslash or forward slash)
+    if fontSetting:match("[/\\]") then
+        -- It's a font file path
+        fontFile = fontSetting
+        fontFlags = "OUTLINE"
+    else
+        -- It's a font object name (legacy support)
+        local fontObject = _G[fontSetting]
+        if not fontObject then
+            fontFile = "Fonts\\FRIZQT__.TTF" -- Fallback
+            fontFlags = "OUTLINE"
+        else
+            fontFile, _, fontFlags = fontObject:GetFont()
+        end
     end
     
-    -- Get font file, size, and flags from the font object
-    local fontFile, _, fontFlags = fontObject:GetFont()
+    -- Apply to title (slightly larger than body text)
+    if frame.title then
+        frame.title:SetFont(fontFile, fontSize + 6, fontFlags)
+    end
     
     -- Apply to all dynamic poem lines
     if frame.container and frame.container.lines then

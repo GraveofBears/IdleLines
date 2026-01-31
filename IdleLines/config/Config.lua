@@ -614,14 +614,25 @@ function Config:Build(panel)
     --------------------------------------------------------
 
     -- Modern dropdown
-    local fontItems = { "Quest Font", "Game Font Normal", "Game Font Highlight", "Game Font Large", "Fancy Book Font", "Dialog Font" }
+    local fontItems = {
+        "Game Font",
+        "Fancy Book Font",
+        "Friz Quadrata (Default)",
+        "Morpheus (Fancy)",
+        "Skurri (Bold)",
+        "Arial Narrow (Clean)",
+        "Number Font (Blocky)",
+        "Chat Font",
+    }
     local fontFiles = {
-        ["Quest Font"] = "QuestFont",
-        ["Game Font Normal"] = "GameFontNormal",
-        ["Game Font Highlight"] = "GameFontHighlight",
-        ["Game Font Large"] = "GameFontNormalLarge",
+        ["Game Font"] = "GameFontNormal",
         ["Fancy Book Font"] = "Fancy22Font",
-        ["Dialog Font"] = "DialogButtonNormalText",
+        ["Friz Quadrata (Default)"] = "Fonts\\FRIZQT__.TTF",
+        ["Morpheus (Fancy)"] = "Fonts\\MORPHEUS.TTF",
+        ["Skurri (Bold)"] = "Fonts\\skurri.TTF",
+        ["Arial Narrow (Clean)"] = "Fonts\\ARIALN.TTF",
+        ["Number Font (Blocky)"] = "NumberFont_Outline_Huge",
+        ["Chat Font"] = "ChatFontNormal",
     }
 
     local initialIndex = 1
@@ -633,8 +644,8 @@ function Config:Build(panel)
 
     local fontDropdown = CreateModernDropdown(content, "Font", fontItems, initialIndex, function(index, name)
         db.font = fontFiles[name]
-        if ns.UI and ns.UI.frame and ns.UI.frame.text then
-            ns.UI.frame.text:SetFontObject(db.font)
+        if ns.UI then
+            ns.UI:ApplyFontSettings()
         end
     end)
     fontDropdown:SetPoint("TOPLEFT", resetColorsBtn, "BOTTOMLEFT", 0, -20)
