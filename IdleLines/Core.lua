@@ -13,19 +13,25 @@ local defaults = {
     enabled = true,
 
     -- UI behavior
-    frameScaleX     = 1.0,  -- Horizontal scale
-    frameScaleY     = 1.0,  -- Vertical scale
-    frameAlpha      = 1.0,  -- Frame transparency (0.0 = invisible, 1.0 = opaque)
+    frameScaleX     = 0.70,  -- Horizontal scale
+    frameScaleY     = 0.70,  -- Vertical scale
+    frameAlpha      = 1.0,   -- Frame transparency (0.0 = invisible, 1.0 = opaque)
     fadeEnabled     = true,
     fadeIn          = 0.3,
     fadeOut         = 0.3,
     soundEnabled    = true,
-    theme           = 1,  -- Default to "Classic Parchment"
-    delay           = 0,  -- Delay before showing poem (seconds)
+    theme           = 1,     -- Default to first theme
+    randomTheme     = true,  -- Use random theme each time
+    delay           = 2,     -- Delay before showing poem (seconds)
     font            = "Fonts\\FRIZQT__.TTF",
-    fontSize        = 18,
-    poemLength      = 40, -- Maximum lines in poem (5-44 range)
+    fontSize        = 12,
+    poemLength      = 40,    -- Maximum lines in poem (5-44 range)
+    writeSpeed      = 0.05,  -- Letter speed (seconds per character)
 
+    -- Text positioning
+    titleOffsetY    = -45,   -- Title vertical offset from top (-200 to 0)
+    textOffsetY     = -70,   -- Text starting vertical offset (-300 to 0)
+    
     -- Theme color overrides (indexed by theme number)
     themeOverrides = {},
 

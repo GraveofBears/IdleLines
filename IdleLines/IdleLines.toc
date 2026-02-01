@@ -2,7 +2,7 @@
 ## Title: IdleLines
 ## Notes: Your character writes poetry when AFK.
 ## Author: Grave
-## Version: 1.0.1
+## Version: 1.0.4
 ## SavedVariables: IdleLinesDB
 ## IconTexture: Interface\Icons\INV_Scroll_11
 

@@ -87,8 +87,16 @@ local function CreateSlider(parent, label, minVal, maxVal, step, initial, onChan
     slider.Text:SetText(label)
     slider.Low:SetText(minVal)
     slider.High:SetText(maxVal)
+    
+    -- Add value display label
+    slider.valueText = slider:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    slider.valueText:SetPoint("TOP", slider, "BOTTOM", 0, 0)
+    slider.valueText:SetTextColor(1, 1, 1, 1)
+    slider.valueText:SetText(string.format("%.2f", initial))
 
     slider:SetScript("OnValueChanged", function(_, value)
+        -- Update the value display
+        slider.valueText:SetText(string.format("%.2f", value))
         onChanged(value)
     end)
 
@@ -376,7 +384,7 @@ function Config:Build(panel)
     enableCB:SetPoint("TOPLEFT", general, "BOTTOMLEFT", 10, -10)
     y = y - 40
 
-    local delaySlider = CreateSlider(content, "Delay Before Showing Poem (seconds)", 0, 30, 1, db.delay or 0, function(v)
+    local delaySlider = CreateSlider(content, "Delay Before Showing Poem (seconds)", 0, 30, 1, db.delay or 2, function(v)
         db.delay = v
     end)
     delaySlider:SetPoint("TOPLEFT", enableCB, "BOTTOMLEFT", 0, -30)
@@ -458,6 +466,13 @@ function Config:Build(panel)
     end)
     themeDropdown:SetPoint("TOPLEFT", appearance, "BOTTOMLEFT", 10, -10)
     y = y - 80
+    
+    -- Random Theme checkbox
+    local randomThemeCB = CreateCheckbox(content, "Use Random Theme Each Time", db.randomTheme or false, function(v)
+        db.randomTheme = v
+    end)
+    randomThemeCB:SetPoint("TOPLEFT", themeDropdown, "BOTTOMLEFT", 12, -10)
+    y = y - 40
     
     y = y - 30
 
@@ -651,7 +666,7 @@ function Config:Build(panel)
     fontDropdown:SetPoint("TOPLEFT", resetColorsBtn, "BOTTOMLEFT", 0, -20)
     y = y - 80
 
-    local fontSizeSlider = CreateSlider(content, "Font Size", 8, 48, 1, db.fontSize or 18, function(v)
+    local fontSizeSlider = CreateSlider(content, "Font Size", 8, 48, 1, db.fontSize or 12, function(v)
         db.fontSize = v
         if ns.UI then 
             ns.UI:ApplyFontSettings()
@@ -660,11 +675,31 @@ function Config:Build(panel)
     fontSizeSlider:SetPoint("TOPLEFT", fontDropdown, "BOTTOMLEFT", 12, -20)
     y = y - 60
 
+    -- Title Offset Slider
+    local titleOffsetSlider = CreateSlider(content, "Title Position (Vertical Offset)", -200, 0, 5, db.titleOffsetY or -45, function(v)
+        db.titleOffsetY = v
+        if ns.UI then 
+            ns.UI:ApplyFontSettings()
+        end
+    end)
+    titleOffsetSlider:SetPoint("TOPLEFT", fontSizeSlider, "BOTTOMLEFT", 0, -30)
+    y = y - 60
+
+    -- Text Offset Slider
+    local textOffsetSlider = CreateSlider(content, "Text Position (Vertical Offset)", -300, 0, 5, db.textOffsetY or -70, function(v)
+        db.textOffsetY = v
+        if ns.UI then 
+            ns.UI:ApplyFontSettings()
+        end
+    end)
+    textOffsetSlider:SetPoint("TOPLEFT", titleOffsetSlider, "BOTTOMLEFT", 0, -30)
+    y = y - 60
+
     local alphaSlider = CreateSlider(content, "Frame Transparency (0% = Invisible, 100% = Solid)", 0, 1, 0.05, db.frameAlpha or 1.0, function(v)
         db.frameAlpha = v
         if ns.UI then ns.UI:ApplySettings() end
     end)
-    alphaSlider:SetPoint("TOPLEFT", fontSizeSlider, "BOTTOMLEFT", 0, -30)
+    alphaSlider:SetPoint("TOPLEFT", textOffsetSlider, "BOTTOMLEFT", 0, -30)
     y = y - 60
 
     --------------------------------------------------------
@@ -674,17 +709,11 @@ function Config:Build(panel)
     local anim = CreateSection(content, "Animation", y)
     y = y - 40
 
-    local soundCB = CreateCheckbox(content, "Enable Writing Sound", db.soundEnabled ~= false, function(v)
-        db.soundEnabled = v
-    end)
-    soundCB:SetPoint("TOPLEFT", anim, "BOTTOMLEFT", 10, -10)
-    y = y - 40
-
     local speedSlider = CreateSlider(content, "Letter Speed (seconds per character)", 0.01, 0.2, 0.005, db.writeSpeed or 0.05, function(v)
         db.writeSpeed = v
         if ns.UI then ns.UI:ApplySettings() end
     end)
-    speedSlider:SetPoint("TOPLEFT", soundCB, "BOTTOMLEFT", 0, -30)
+    speedSlider:SetPoint("TOPLEFT", anim, "BOTTOMLEFT", 10, -10)
     y = y - 60
 
     --------------------------------------------------------
@@ -695,7 +724,7 @@ function Config:Build(panel)
     y = y - 40
 
     -- Horizontal Scale
-    local scaleXSlider = CreateSlider(content, "Horizontal Scale", 0.5, 2.0, 0.05, db.frameScaleX or 1.0, function(v)
+    local scaleXSlider = CreateSlider(content, "Horizontal Scale", 0.5, 2.0, 0.05, db.frameScaleX or 0.70, function(v)
         db.frameScaleX = v
         if ns.UI then ns.UI:ApplySettings() end
     end)
@@ -703,7 +732,7 @@ function Config:Build(panel)
     y = y - 60
 
     -- Vertical Scale
-    local scaleYSlider = CreateSlider(content, "Vertical Scale", 0.5, 2.0, 0.05, db.frameScaleY or 1.0, function(v)
+    local scaleYSlider = CreateSlider(content, "Vertical Scale", 0.5, 2.0, 0.05, db.frameScaleY or 0.70, function(v)
         db.frameScaleY = v
         if ns.UI then ns.UI:ApplySettings() end
     end)

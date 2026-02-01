@@ -423,13 +423,18 @@ function UI:CreateFrame()
     -- Main Frame (Custom Magical Tome)
     --------------------------------------------------------
 
-    local frame = CreateFrame("Frame", "IdleLinesFrame", UIParent, "BackdropTemplate")
+    local frame = CreateFrame("Frame", "IdleLinesFrame", WorldFrame, "BackdropTemplate")
     self.frame = frame
 
     frame:SetSize(700, 650)
-    frame:SetPoint("CENTER")
-    frame:SetFrameStrata("DIALOG")
+    frame:SetPoint("CENTER", UIParent, "CENTER")
+    frame:SetFrameStrata("FULLSCREEN_DIALOG")
+    frame:SetFrameLevel(10000)
     frame:SetClampedToScreen(true)
+    
+    -- WorldFrame doesn't have UI scaling, so we need to apply it manually
+    frame:SetScale(UIParent:GetEffectiveScale())
+    
     frame:Hide()
 
     --------------------------------------------------------
@@ -480,31 +485,102 @@ function UI:CreateFrame()
     title:SetText("IdleLines")
 
     --------------------------------------------------------
-    -- Close Button
+    -- Close Button (Parented to UIParent for click detection)
     --------------------------------------------------------
 
-    local close = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
+    local close = CreateFrame("Button", nil, UIParent)
     frame.closeButton = close
+    close:SetSize(32, 32)
+    close:SetFrameStrata("FULLSCREEN_DIALOG")
+    close:SetFrameLevel(10010)
+    
+    -- Make button ignore parent's alpha/scale so it shows even when UIParent is hidden
+    close:SetIgnoreParentAlpha(true)
+    close:SetIgnoreParentScale(true)
+    
+    -- Position relative to main frame (will update in ShowPoem)
     close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -6, -6)
-    close:SetScale(1.2)
-
+    
+    -- Enable mouse interaction
+    close:EnableMouse(true)
+    close:RegisterForClicks("AnyUp")
+    
+    -- Set normal texture
+    close:SetNormalTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Up")
+    close:SetPushedTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Down")
+    close:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight", "ADD")
+    
     close:SetScript("OnClick", function()
         UI:HidePoem()
     end)
+    
+    -- Debug to see if button is being clicked
+    close:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText("Close")
+        GameTooltip:Show()
+    end)
+    close:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    
+    close:Hide()  -- Hidden by default, shown when poem shows
 
     --------------------------------------------------------
-    -- Export Button (bottom of frame)
+    -- Export Button (Parented to UIParent for click detection)
     --------------------------------------------------------
 
-    local exportBtn = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    local exportBtn = CreateFrame("Button", nil, UIParent)
     frame.exportButton = exportBtn
     exportBtn:SetSize(120, 24)
+    exportBtn:SetFrameStrata("FULLSCREEN_DIALOG")
+    exportBtn:SetFrameLevel(10010)
+    
+    -- Make button ignore parent's alpha/scale so it shows even when UIParent is hidden
+    exportBtn:SetIgnoreParentAlpha(true)
+    exportBtn:SetIgnoreParentScale(true)
+    
+    -- Position relative to main frame (will update in ShowPoem)
     exportBtn:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
-    exportBtn:SetText("Copy Poem")
+    
+    -- Enable mouse interaction
+    exportBtn:EnableMouse(true)
+    exportBtn:RegisterForClicks("AnyUp")
+    
+    -- Create button textures
+    exportBtn:SetNormalTexture("Interface\\Buttons\\UI-Panel-Button-Up")
+    exportBtn:SetPushedTexture("Interface\\Buttons\\UI-Panel-Button-Down")
+    exportBtn:SetHighlightTexture("Interface\\Buttons\\UI-Panel-Button-Highlight", "ADD")
+    
+    -- Get the textures and set them to stretch
+    local normalTex = exportBtn:GetNormalTexture()
+    local pushedTex = exportBtn:GetPushedTexture()
+    local highlightTex = exportBtn:GetHighlightTexture()
+    
+    normalTex:SetTexCoord(0, 0.625, 0, 0.6875)
+    pushedTex:SetTexCoord(0, 0.625, 0, 0.6875)
+    highlightTex:SetTexCoord(0, 0.625, 0, 0.6875)
+    
+    -- Add text
+    exportBtn.text = exportBtn:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    exportBtn.text:SetPoint("CENTER")
+    exportBtn.text:SetText("Copy Poem")
     
     exportBtn:SetScript("OnClick", function()
         UI:ExportCurrentPoem()
     end)
+    
+    -- Debug tooltip
+    exportBtn:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:SetText("Copy poem to clipboard")
+        GameTooltip:Show()
+    end)
+    exportBtn:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    
+    exportBtn:Hide()  -- Hidden by default, shown when poem shows
 
     --------------------------------------------------------
     -- Text Container
@@ -539,8 +615,8 @@ function UI:CreateFrame()
     -- Scaling (separate X and Y)
     --------------------------------------------------------
 
-    local scaleX = db.frameScaleX or 1.0
-    local scaleY = db.frameScaleY or 1.0
+    local scaleX = db.frameScaleX or 0.70
+    local scaleY = db.frameScaleY or 0.70
     frame:SetScale(1.0)  -- Reset to 1.0 base
     
     -- Store original size
@@ -783,6 +859,12 @@ end
 
 function UI:ShowPoem(poem, title)
     if not ns:IsEnabled() then return end
+    
+    -- Prevent duplicate generation
+    if self.isGenerating then
+        return
+    end
+    self.isGenerating = true
 
     local frame = self.frame or self:CreateFrame()
 
@@ -795,6 +877,14 @@ function UI:ShowPoem(poem, title)
     -- Ensure frame is fully visible
     frame:SetAlpha(1)
     frame:Show()
+    
+    -- Show buttons (they're parented to UIParent so they work even when UIParent is hidden)
+    if frame.closeButton then
+        frame.closeButton:Show()
+    end
+    if frame.exportButton then
+        frame.exportButton:Show()
+    end
 
     -- Store current poem and title for export
     frame.currentPoem = poem
@@ -809,6 +899,11 @@ function UI:ShowPoem(poem, title)
     frame:EnableMouse(true)
 
     self:FadeInLines(poem)
+    
+    -- Allow new generation after a short delay (after fade-in completes)
+    C_Timer.After(1.0, function()
+        self.isGenerating = false
+    end)
 end
 
 ------------------------------------------------------------
@@ -821,6 +916,14 @@ function UI:HidePoem()
     local db = GetDB()
 
     frame:EnableMouse(false)
+    
+    -- Hide buttons
+    if frame.closeButton then
+        frame.closeButton:Hide()
+    end
+    if frame.exportButton then
+        frame.exportButton:Hide()
+    end
     
     -- Reset AFK state tracker to prevent re-triggering
     if ns.events then
@@ -857,8 +960,8 @@ function UI:ApplySettings()
     local db = GetDB()
 
     -- Apply separate X/Y scaling
-    local scaleX = db.frameScaleX or 1.0
-    local scaleY = db.frameScaleY or 1.0
+    local scaleX = db.frameScaleX or 0.70
+    local scaleY = db.frameScaleY or 0.70
     
     frame.baseWidth = frame.baseWidth or 700
     frame.baseHeight = frame.baseHeight or 650
@@ -947,6 +1050,19 @@ function UI:ApplyFontSettings()
     -- Apply to title (slightly larger than body text)
     if frame.title then
         frame.title:SetFont(fontFile, fontSize + 6, fontFlags)
+        
+        -- Apply title offset
+        local titleOffsetY = db.titleOffsetY or -45
+        frame.title:ClearAllPoints()
+        frame.title:SetPoint("TOP", 0, titleOffsetY)
+    end
+    
+    -- Update container position based on text offset
+    if frame.container then
+        local textOffsetY = db.textOffsetY or -70
+        frame.container:ClearAllPoints()
+        frame.container:SetPoint("TOPLEFT", 35, textOffsetY)
+        frame.container:SetPoint("BOTTOMRIGHT", -35, 30)
     end
     
     -- Apply to all dynamic poem lines
@@ -974,49 +1090,102 @@ function UI:ExportCurrentPoem()
     
     -- Create export popup if it doesn't exist
     if not self.exportPopup then
-        self.exportPopup = CreateFrame("Frame", "IdleLinesExportPopup", UIParent, "BasicFrameTemplateWithInset")
+        -- Parent to UIParent, no manual scaling
+        self.exportPopup = CreateFrame("Frame", "IdleLinesExportPopup", UIParent, "BackdropTemplate")
         local popup = self.exportPopup
         
-        popup:SetSize(500, 400)
-        popup:SetPoint("CENTER")
-        popup:SetFrameStrata("DIALOG")
+        popup:SetSize(600, 450)
+        popup:SetPoint("CENTER", UIParent, "CENTER")
+        popup:SetFrameStrata("FULLSCREEN_DIALOG")
+        popup:SetFrameLevel(10020)
         popup:SetClampedToScreen(true)
+        
+        -- Backdrop
+        popup:SetBackdrop({
+            bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
+            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+            tile     = true,
+            tileSize = 32,
+            edgeSize = 32,
+            insets   = { left = 11, right = 12, top = 12, bottom = 11 },
+        })
+        popup:SetBackdropColor(0, 0, 0, 1)
+        
         popup:Hide()
         
-        popup.TitleText:SetText("Copy Poem")
+        ----------------------------------------------------
+        -- Title (also used as drag handle)
+        ----------------------------------------------------
+        popup.title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        popup.title:SetPoint("TOP", 0, -14)
+        popup.title:SetText("Copy Poem")
         
-        -- Scroll frame
+        -- Invisible drag frame over the title area
+        local dragFrame = CreateFrame("Frame", nil, popup)
+        dragFrame:SetPoint("TOPLEFT", 10, -10)
+        dragFrame:SetPoint("TOPRIGHT", -40, -10)
+        dragFrame:SetHeight(30)
+        dragFrame:EnableMouse(true)
+        dragFrame:SetScript("OnMouseDown", function(self, button)
+            if button == "LeftButton" then
+                popup:StartMoving()
+            end
+        end)
+        dragFrame:SetScript("OnMouseUp", function()
+            popup:StopMovingOrSizing()
+        end)
+        popup:SetMovable(true)
+        
+        ----------------------------------------------------
+        -- Close button (top right)
+        ----------------------------------------------------
+        local closeBtn = CreateFrame("Button", nil, popup)
+        closeBtn:SetSize(32, 32)
+        closeBtn:SetPoint("TOPRIGHT", -6, -6)
+        closeBtn:SetNormalTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Up")
+        closeBtn:SetPushedTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Down")
+        closeBtn:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight", "ADD")
+        closeBtn:SetScript("OnClick", function() popup:Hide() end)
+        
+        ----------------------------------------------------
+        -- Scroll frame + edit box
+        ----------------------------------------------------
         local scroll = CreateFrame("ScrollFrame", nil, popup, "UIPanelScrollFrameTemplate")
         scroll:SetPoint("TOPLEFT", 20, -40)
-        scroll:SetPoint("BOTTOMRIGHT", -40, 40)
+        scroll:SetPoint("BOTTOMRIGHT", -40, 50)
         
-        -- Edit box
         local editBox = CreateFrame("EditBox", nil, scroll)
         editBox:SetMultiLine(true)
-        editBox:SetFontObject(ChatFontNormal)
-        editBox:SetWidth(420)
+        editBox:SetFontObject(ChatFontNormal)  -- nice readable size
+        editBox:SetWidth(520)
         editBox:SetAutoFocus(true)
         editBox:SetScript("OnEscapePressed", function() popup:Hide() end)
+        editBox:SetScript("OnEditFocusGained", function(self)
+            self:HighlightText()
+        end)
         
         scroll:SetScrollChild(editBox)
         popup.editBox = editBox
         
-        -- Close button
+        ----------------------------------------------------
+        -- Bottom Close button
+        ----------------------------------------------------
         local close = CreateFrame("Button", nil, popup, "UIPanelButtonTemplate")
         close:SetSize(120, 24)
-        close:SetPoint("BOTTOM", 0, 10)
+        close:SetPoint("BOTTOM", 0, 16)
         close:SetText("Close")
         close:SetScript("OnClick", function() popup:Hide() end)
     end
     
-    -- Format with title at top
-    local fullText = title .. "\n" .. string.rep("=", #title) .. "\n\n" .. poem
-    
-    self.exportPopup.editBox:SetText(fullText)
-    self.exportPopup.editBox:HighlightText()
-    self.exportPopup:Show()
-    self.exportPopup.editBox:SetFocus()
+    -- Update contents each time
+    local popup = self.exportPopup
+    popup.title:SetText("Copy Poem: " .. title)
+    popup.editBox:SetText(poem)
+    popup.editBox:HighlightText()
+    popup.editBox:SetFocus()
+    popup:Show()
 end
+
 
 ------------------------------------------------------------
 -- Module Init Hook

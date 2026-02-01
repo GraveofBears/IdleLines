@@ -477,21 +477,83 @@ local function AddClassZoneCombo(poem, classKey, zoneKey, t, used)
 end
 
 local function AddRecentEvents(poem, r, t, used)
-    local function add(entry, list)
+    -- Track which events we've already mentioned this poem
+    local eventsAdded = used.recentEventsAdded or {}
+    used.recentEventsAdded = eventsAdded
+    
+    local function add(eventKey, entry, list)
+        -- Skip if already added this event type
+        if eventsAdded[eventKey] then return end
+        
         if IsFresh(entry) and #list > 0 then
             local template = Pick(list, used)
-            table.insert(poem, template:format(entry.text))
+            
+            -- Make the reference more poetic by generalizing specifics
+            local poeticText = entry.text
+            
+            -- For achievements, just use simple poetic references
+            if eventKey == "achievement" and poeticText then
+                local generalizations = {
+                    "victory", "triumph", "honor", "glory", "valor",
+                    "mastery", "achievement", "conquest", "deed"
+                }
+                poeticText = generalizations[math.random(1, #generalizations)]
+                
+            -- For loot, use evocative treasure words
+            elseif eventKey == "loot" and poeticText then
+                local generalizations = {
+                    "treasure", "spoils", "fortune", "riches", "bounty",
+                    "prize", "gain", "reward"
+                }
+                poeticText = generalizations[math.random(1, #generalizations)]
+                
+            -- For spells, use mystical power words
+            elseif eventKey == "spell" and poeticText then
+                local generalizations = {
+                    "power", "magic", "sorcery", "craft", "arcane",
+                    "incantation", "mystery", "art"
+                }
+                poeticText = generalizations[math.random(1, #generalizations)]
+                
+            -- For kills, keep it general and poetic
+            elseif eventKey == "kill" and poeticText then
+                local generalizations = {
+                    "your foe", "the enemy", "your quarry", "the fallen",
+                    "opposition", "the adversary", "your challenger"
+                }
+                poeticText = generalizations[math.random(1, #generalizations)]
+                
+            -- For mounts, simplify to avoid jarring names
+            elseif eventKey == "mount" and poeticText then
+                local generalizations = {
+                    "your steed", "your companion", "your mount",
+                    "your bearer", "the swift one"
+                }
+                poeticText = generalizations[math.random(1, #generalizations)]
+                
+            -- For skills, keep it abstract
+            elseif eventKey == "skill" and poeticText then
+                local generalizations = {
+                    "your craft", "practice", "refinement", "study",
+                    "effort", "discipline", "patience"
+                }
+                poeticText = generalizations[math.random(1, #generalizations)]
+            end
+            
+            table.insert(poem, template:format(poeticText))
+            eventsAdded[eventKey] = true
         end
     end
 
-    add(r.lastKill,        t.recentKillLines)
-    add(r.lastSpell,       t.recentSpellLines)
-    add(r.lastLoot,        t.recentLootLines)
-    add(r.lastEmote,       t.recentEmoteLines)
-    add(r.lastSkill,       t.recentSkillLines)
-    add(r.lastLevel,       t.recentLevelLines)
-    add(r.lastAchievement, t.recentAchievementLines)
-    add(r.lastMount,       t.recentMountLines)
+    -- Only add each type of event once
+    add("kill",        r.lastKill,        t.recentKillLines)
+    add("spell",       r.lastSpell,       t.recentSpellLines)
+    add("loot",        r.lastLoot,        t.recentLootLines)
+    add("emote",       r.lastEmote,       t.recentEmoteLines)
+    add("skill",       r.lastSkill,       t.recentSkillLines)
+    add("level",       r.lastLevel,       t.recentLevelLines)
+    add("achievement", r.lastAchievement, t.recentAchievementLines)
+    add("mount",       r.lastMount,       t.recentMountLines)
 end
 
 local function AddGeneralFiller(poem, t, used)
@@ -547,7 +609,7 @@ function Generator:BuildPoem()
         { chance = 1.0, fn = function() safe(function() AddTimeLine(poem, timeKey, t, used) end) end },
         { chance = 0.7, fn = function() safe(function() AddSeasonLine(poem, seasonKey, t, used) end) end },
         { chance = 0.6, fn = function() safe(function() AddClassZoneCombo(poem, classKey, zoneKey, t, used) end) end },
-        { chance = 0.8, fn = function() safe(function() AddRecentEvents(poem, r, t, used) end) end },
+        { chance = 0.3, fn = function() safe(function() AddRecentEvents(poem, r, t, used) end) end },  -- Reduced from 0.8
         { chance = 1.0, fn = function() safe(function() AddGeneralFiller(poem, t, used) end) end },
         { chance = 0.01, fn = function() safe(function() AddRareLine(poem, t, used) end) end },
     }

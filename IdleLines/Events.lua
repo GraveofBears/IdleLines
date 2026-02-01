@@ -75,6 +75,15 @@ local function HandleAFKState()
                 delayTimer = nil
                 -- Double-check still AFK after delay
                 if UnitIsAFK("player") and ns.UI and ns.UI.ShowPoem and ns.Generator then
+                    -- Select random theme if enabled
+                    if ns.db.randomTheme and ns.UI.Themes then
+                        local randomIndex = math.random(1, #ns.UI.Themes)
+                        ns.db.theme = randomIndex
+                        if ns.UI.ApplyTheme then
+                            ns.UI:ApplyTheme()
+                        end
+                    end
+                    
                     local poem, title = ns.Generator:BuildPoem()
                     ns.UI:ShowPoem(poem, title)
                 end
@@ -82,6 +91,15 @@ local function HandleAFKState()
         else
             -- No delay, show immediately
             if ns.UI and ns.UI.ShowPoem and ns.Generator then
+                -- Select random theme if enabled
+                if ns.db.randomTheme and ns.UI.Themes then
+                    local randomIndex = math.random(1, #ns.UI.Themes)
+                    ns.db.theme = randomIndex
+                    if ns.UI.ApplyTheme then
+                        ns.UI:ApplyTheme()
+                    end
+                end
+                
                 local poem, title = ns.Generator:BuildPoem()
                 ns.UI:ShowPoem(poem, title)
             end
