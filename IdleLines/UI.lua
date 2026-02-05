@@ -1,5 +1,5 @@
 --========================================================--
--- IdleLines - UI (Magical Tome Edition, Fade-In Per Line)
+-- IdleLines - UI 
 --========================================================--
 
 local addonName, ns = ...
@@ -8,7 +8,7 @@ local UI = {}
 ns.UI = UI
 
 ------------------------------------------------------------
--- Theme Presets (Background + Text Colors)
+-- Theme Presets 
 ------------------------------------------------------------
 
 UI.Themes = {
@@ -420,7 +420,7 @@ function UI:CreateFrame()
     local db = GetDB()
 
     --------------------------------------------------------
-    -- Main Frame (Custom Magical Tome)
+    -- Main Frame 
     --------------------------------------------------------
 
     local frame = CreateFrame("Frame", "IdleLinesFrame", WorldFrame, "BackdropTemplate")
@@ -438,13 +438,13 @@ function UI:CreateFrame()
     frame:Hide()
 
     --------------------------------------------------------
-    -- Background Texture (for atlas-based themes)
+    -- Background Texture for Texture Atlas
     --------------------------------------------------------
     
     local bg = frame:CreateTexture(nil, "BACKGROUND")
     frame.bgTexture = bg
     bg:SetAllPoints(true)
-    bg:Hide()  -- Hidden by default, shown for atlas themes
+    bg:Hide()
 
     --------------------------------------------------------
     -- Apply Theme
@@ -453,7 +453,7 @@ function UI:CreateFrame()
     self:ApplyTheme()
 
     --------------------------------------------------------
-    -- Additional Parchment Overlay (for more texture)
+    -- Additional Parchment Overlay 
     --------------------------------------------------------
 
     local parchmentOverlay = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
@@ -464,7 +464,7 @@ function UI:CreateFrame()
     parchmentOverlay:SetVertexColor(0.95, 0.87, 0.69)
 
     --------------------------------------------------------
-    -- Optional: Vignette for aged edges
+    --  Vignette for aged edges
     --------------------------------------------------------
 
     local vignette = frame:CreateTexture(nil, "BORDER")
@@ -485,7 +485,7 @@ function UI:CreateFrame()
     title:SetText("IdleLines")
 
     --------------------------------------------------------
-    -- Close Button (Parented to UIParent for click detection)
+    -- Close Button 
     --------------------------------------------------------
 
     local close = CreateFrame("Button", nil, UIParent)
@@ -498,7 +498,7 @@ function UI:CreateFrame()
     close:SetIgnoreParentAlpha(true)
     close:SetIgnoreParentScale(true)
     
-    -- Position relative to main frame (will update in ShowPoem)
+    -- Position relative to main frame 
     close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -6, -6)
     
     -- Enable mouse interaction
@@ -524,10 +524,10 @@ function UI:CreateFrame()
         GameTooltip:Hide()
     end)
     
-    close:Hide()  -- Hidden by default, shown when poem shows
+    close:Hide()  -- Hidden by default
 
     --------------------------------------------------------
-    -- Export Button (Parented to UIParent for click detection)
+    -- Export Button 
     --------------------------------------------------------
 
     local exportBtn = CreateFrame("Button", nil, UIParent)
@@ -580,7 +580,7 @@ function UI:CreateFrame()
         GameTooltip:Hide()
     end)
     
-    exportBtn:Hide()  -- Hidden by default, shown when poem shows
+    exportBtn:Hide()  -- Hidden by default
 
     --------------------------------------------------------
     -- Text Container
@@ -612,7 +612,7 @@ function UI:CreateFrame()
     text:SetShadowColor(0, 0, 0, 0.6)
 
     --------------------------------------------------------
-    -- Scaling (separate X and Y)
+    -- Scaling
     --------------------------------------------------------
 
     local scaleX = db.frameScaleX or 0.70
@@ -733,7 +733,7 @@ function UI:ApplyTheme()
 end
 
 ------------------------------------------------------------
--- Fade-In Per Line Logic
+-- Fade In Per Line Logic
 ------------------------------------------------------------
 
 function UI:FadeInLines(poem)
@@ -762,7 +762,7 @@ function UI:FadeInLines(poem)
     
     local fontFile, fontFlags
     
-    -- Check if it's a file path (contains backslash or forward slash)
+    -- Check if it's a file path 
     if fontSetting:match("[/\\]") then
         -- It's a font file path
         fontFile = fontSetting
@@ -835,7 +835,7 @@ function UI:FadeInLines(poem)
 end
 
 ------------------------------------------------------------
--- Public: Update Poem Colors (for when theme changes while poem is visible)
+-- Public: Update Poem Colors 
 ------------------------------------------------------------
 
 function UI:UpdatePoemColors()
@@ -878,7 +878,7 @@ function UI:ShowPoem(poem, title)
     frame:SetAlpha(1)
     frame:Show()
     
-    -- Show buttons (they're parented to UIParent so they work even when UIParent is hidden)
+    -- Show buttons 
     if frame.closeButton then
         frame.closeButton:Show()
     end
@@ -900,14 +900,14 @@ function UI:ShowPoem(poem, title)
 
     self:FadeInLines(poem)
     
-    -- Allow new generation after a short delay (after fade-in completes)
+    -- Allow new generation after a short delay 
     C_Timer.After(1.0, function()
         self.isGenerating = false
     end)
 end
 
 ------------------------------------------------------------
--- Public: HidePoem
+-- Public Hide Poem
 ------------------------------------------------------------
 
 function UI:HidePoem()
@@ -951,7 +951,7 @@ function UI:HidePoem()
 end
 
 ------------------------------------------------------------
--- Public: ApplySettings
+-- Public Apply Settings
 ------------------------------------------------------------
 
 function UI:ApplySettings()
@@ -1018,7 +1018,7 @@ function UI:ApplySettings()
 end
 
 ------------------------------------------------------------
--- Public: ApplyFontSettings
+-- Public Apply FontSettings
 ------------------------------------------------------------
 
 function UI:ApplyFontSettings()
@@ -1031,7 +1031,7 @@ function UI:ApplyFontSettings()
     
     local fontFile, fontFlags
     
-    -- Check if it's a file path (contains backslash or forward slash)
+    -- Check if it's a file path 
     if fontSetting:match("[/\\]") then
         -- It's a font file path
         fontFile = fontSetting
@@ -1047,7 +1047,7 @@ function UI:ApplyFontSettings()
         end
     end
     
-    -- Apply to title (slightly larger than body text)
+    -- Apply to title 
     if frame.title then
         frame.title:SetFont(fontFile, fontSize + 6, fontFlags)
         
@@ -1079,7 +1079,7 @@ function UI:ApplyFontSettings()
 end
 
 ------------------------------------------------------------
--- Public: Export Current Poem
+-- Public Export Current Poem
 ------------------------------------------------------------
 
 function UI:ExportCurrentPoem()
@@ -1114,7 +1114,7 @@ function UI:ExportCurrentPoem()
         popup:Hide()
         
         ----------------------------------------------------
-        -- Title (also used as drag handle)
+        -- Title 
         ----------------------------------------------------
         popup.title = popup:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
         popup.title:SetPoint("TOP", 0, -14)
@@ -1137,7 +1137,7 @@ function UI:ExportCurrentPoem()
         popup:SetMovable(true)
         
         ----------------------------------------------------
-        -- Close button (top right)
+        -- Close button 
         ----------------------------------------------------
         local closeBtn = CreateFrame("Button", nil, popup)
         closeBtn:SetSize(32, 32)

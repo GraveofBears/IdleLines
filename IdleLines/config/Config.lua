@@ -1,5 +1,5 @@
 --========================================================--
--- IdleLines - Unified Configuration (Modern Blizzard API)
+-- IdleLines - Unified Configuration 
 --========================================================--
 
 local addonName, ns = ...

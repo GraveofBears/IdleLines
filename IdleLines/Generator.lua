@@ -1,5 +1,5 @@
 --========================================================--
--- IdleLines - Generator (Story Mode + Dynamic Titles)
+-- IdleLines - Generator 
 --========================================================--
 
 local addonName, ns = ...
@@ -8,7 +8,7 @@ local Generator = {}
 ns.Generator = Generator
 
 ------------------------------------------------------------
--- Title Templates (weighted by poem context)
+-- Title Templates 
 ------------------------------------------------------------
 
 local titleTemplates = {
@@ -217,7 +217,7 @@ local titleTemplates = {
 }
 
 ------------------------------------------------------------
--- Utility: Random From Table (No Repeats Per Poem)
+-- Utility Random From Table 
 ------------------------------------------------------------
 
 local function Pick(t, used)
@@ -243,7 +243,7 @@ local function Pick(t, used)
 end
 
 ------------------------------------------------------------
--- Generate Contextual Title (Content-Aware)
+-- Generate Contextual Title 
 ------------------------------------------------------------
 
 local function GenerateTitle(context, poemLines)
@@ -324,7 +324,7 @@ local function GenerateTitle(context, poemLines)
 end
 
 ------------------------------------------------------------
--- Utility: Recent Memory Freshness (5-minute decay)
+-- Utility: Recent Memory Freshness 
 ------------------------------------------------------------
 
 local function IsFresh(entry)
@@ -333,7 +333,7 @@ local function IsFresh(entry)
 end
 
 ------------------------------------------------------------
--- Template Sources (loaded at runtime)
+-- Template Sources 
 ------------------------------------------------------------
 
 local function GetTemplates()
@@ -443,7 +443,7 @@ local function GetSeasonKey()
 end
 
 ------------------------------------------------------------
--- Adders (each adds lines to the poem)
+-- Adders 
 ------------------------------------------------------------
 
 local function AddClassLine(poem, classKey, t, used)

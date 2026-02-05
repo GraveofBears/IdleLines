@@ -1,5 +1,5 @@
 --========================================================--
--- IdleLines - Events (Midnight Safe, Updated)
+-- IdleLines - Events 
 --========================================================--
 
 local addonName, ns = ...
